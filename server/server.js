@@ -2,8 +2,10 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
+const cors = require("cors");
 const passport = require("./config/passport");
 const authRoutes = require("./routes/auth");
+const apiRoutes = require("./routes/api");
 const profileRoutes = require("./routes/profile");
 const sequelize = require("./config/database");
 
@@ -16,6 +18,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(cors());
+app.use("/api", apiRoutes);
 app.use(passport.initialize());
 app.use(passport.session());
 
