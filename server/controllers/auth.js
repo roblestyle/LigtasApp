@@ -19,6 +19,7 @@ class AuthController {
             username: req.user.username,
             id: req.user.id,
             email: req.user.email,
+            profile_image: req.user.profile_image,
           },
           token,
         });

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api/axios";
 
-export default function table() {
+export default function Table() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -17,10 +17,11 @@ export default function table() {
 
     fetchUsers();
   }, []);
+
   return (
     <div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-center text-white">
+        <table className="w-full text-sm text-center text-gray-900">
           <caption className="p-4 text-md font-semibold text-left rtl:text-right text-gray-900 bg-white">
             <div className="px-4 flex justify-start">
               <label htmlFor="table-search" className="sr-only">
@@ -55,7 +56,7 @@ export default function table() {
           </caption>
           <thead className="text-xs text-white uppercase bg-red-950">
             <tr>
-              <th scope="col" className="px-2 py-3">
+              <th scope="col" className="px-6 py-3">
                 USERS
               </th>
               <th scope="col" className="px-6 py-3">
@@ -75,12 +76,15 @@ export default function table() {
           <tbody>
             {users.map((user, index) => (
               <tr key={index} className="bg-white border-b text-gray-600">
-                <th
-                  scope="row"
-                  className="px-2 py-4 font-medium text-gray-600 whitespace-nowrap"
-                >
-                  {user.users}
-                </th>
+                <td className="px-6 py-4 text-center">
+                  {user.profile_image && (
+                    <img
+                      src={user.profile_image}
+                      alt="Profile Image"
+                      className="inline-block h-10 w-10 rounded-md"
+                    />
+                  )}
+                </td>
                 <td className="px-6 py-4">{user.name}</td>
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.createdAt}</td>

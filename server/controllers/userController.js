@@ -7,6 +7,7 @@ const createGoogleUser = async (profile) => {
       google_id: profile.id,
       email: profile.emails[0].value,
       name: profile.displayName,
+      profile_image: profile.photos[0].value,
     });
   }
   return user;

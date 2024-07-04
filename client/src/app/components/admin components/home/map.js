@@ -20,12 +20,12 @@ const LeafletMap = () => {
 
   return (
     <MapContainer
-      center={[51.505, -0.09]}
+      center={[13.75, 121.05]}
       zoom={13}
       style={{ height: "480px", width: "100%" }}
     >
       <TileLayer url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png" />
-      <Marker position={[51.505, -0.09]}>
+      <Marker position={[13.75, 121.05]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>

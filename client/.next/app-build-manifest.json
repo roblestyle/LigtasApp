@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/pages/admin/accounts/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/pages/admin/accounts/page.js"
+      "static/chunks/app/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -11,11 +11,10 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/pages/admin/maps/page": [
+    "/pages/home/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/pages/admin/maps/page.css",
-      "static/chunks/app/pages/admin/maps/page.js"
+      "static/chunks/app/pages/home/page.js"
     ]
   }
 }

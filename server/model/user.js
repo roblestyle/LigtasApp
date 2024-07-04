@@ -23,6 +23,10 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  profile_image: {
+    type: DataTypes.STRING, // Assuming you store the URL to the profile image
+    allowNull: true,
+  },
 });
 
 module.exports = User; // Corrected this line
