@@ -1,22 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios";
 
 function Regform() {
-  const [name, setName] = useState("");
+  const [username, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [user_password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/google", {
-        name,
+      const response = await axios.post("/auth/register", {
+        username,
         email,
-        password,
+        user_password,
       });
+      {
+        timeout: 5000;
+      }
 
       console.log("Registration successful:", response.data);
       // Optionally handle success (redirect, show message, etc.)
@@ -59,7 +62,7 @@ function Regform() {
                   <input
                     type="text"
                     id="name"
-                    value={name}
+                    value={username}
                     onChange={(e) => setName(e.target.value)}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-3"
                     placeholder="Enter Name"
@@ -97,7 +100,7 @@ function Regform() {
               <input
                 type="password"
                 id="password"
-                value={password}
+                value={user_password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 sm:p-3"
                 placeholder="Enter Password"

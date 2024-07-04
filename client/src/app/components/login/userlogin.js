@@ -1,28 +1,32 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios";
 
 function userlogin() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [user_password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/google", {
-        name,
+      const response = await axios.post("/auth/login", {
         email,
-        password,
+        user_password,
       });
 
-      console.log("Registration successful:", response.data);
+      console.log("Login successful:", response.data);
       // Optionally handle success (redirect, show message, etc.)
+      window.location.href = "/pages/home"; // Redirect to home on successful login
     } catch (error) {
-      console.error("Registration failed:", error);
-      // Handle error (show error message, etc.)
+      console.error("Login failed:", error);
+      if (error.response && error.response.status === 401) {
+        setLoginError("Invalid email or password");
+      } else {
+        setLoginError("Login failed. Please try again later.");
+      }
     }
   };
 
@@ -78,7 +82,7 @@ function userlogin() {
                   <input
                     type="password"
                     id="password"
-                    value={password}
+                    value={user_password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 sm:p-3"
                     placeholder="Enter Password"
@@ -87,6 +91,9 @@ function userlogin() {
                 </div>
               </div>
             </div>
+            {loginError && (
+              <p className="text-red-500 text-sm mb-3">{loginError}</p>
+            )}
             <div className="flex justify-center items-center p-4">
               <button
                 type="submit"

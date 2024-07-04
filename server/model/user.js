@@ -4,7 +4,7 @@ const sequelize = require("../config/database");
 const User = sequelize.define("User", {
   google_id: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
   },
   username: {
@@ -17,11 +17,14 @@ const User = sequelize.define("User", {
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    validate: {
+      isEmail: true,
+    },
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   profile_image: {
     type: DataTypes.STRING, // Assuming you store the URL to the profile image

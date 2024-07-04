@@ -6,7 +6,6 @@ const cors = require("cors");
 const passport = require("./config/passport");
 const authRoutes = require("./routes/auth");
 const apiRoutes = require("./routes/api");
-const profileRoutes = require("./routes/profile");
 const sequelize = require("./config/database");
 
 const app = express();
@@ -18,13 +17,13 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(express.json());
 app.use(cors());
 app.use("/api", apiRoutes);
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes);
-app.use("/profile", profileRoutes);
 
 const startServer = async () => {
   try {
