@@ -1,6 +1,6 @@
 import React from "react";
 
-function regcard() {
+function homebg() {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <img src="/user_home.png" className="object-cover w-full h-full" />
@@ -8,4 +8,4 @@ function regcard() {
   );
 }
 
-export default regcard;
+export default homebg;

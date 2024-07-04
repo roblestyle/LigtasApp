@@ -24,7 +24,7 @@ const WebcamComponent = () => {
         {error && <p className="p-4 text-red-500">{error}</p>}
       </div>
       <div className="flex items-center justify-center">
-        <div className="border border-gray-600 rounded-lg h-auto w-auto flex items-center justify-center">
+        <div className="rounded-lg h-auto w-auto flex items-center justify-center">
           <Webcam
             audio={false}
             ref={webcamRef}
@@ -64,7 +64,9 @@ const WebcamComponent = () => {
             </svg>
           </button>
         </div>
-        <p className="flex justify-center font-medium py-3">Take a picture</p>
+        <p className="flex justify-center text-white font-medium py-3">
+          Take a picture
+        </p>
       </div>
     </div>
   );
