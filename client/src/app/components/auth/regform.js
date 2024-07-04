@@ -140,9 +140,12 @@ function Regform() {
           </div>
           <p className="text-white mb-1 text-center text-xs sm:text-lg sm:text-left">
             Already have an account?{" "}
-            <span className="text-[#FFD910] underline underline-offset-1">
+            <a
+              href="/pages/login"
+              className="text-[#FFD910] underline underline-offset-1"
+            >
               Sign in
-            </span>
+            </a>
           </p>
           <p className="text-white text-center text-xs sm:text-lg sm:text-left">
             By registering, you agree with

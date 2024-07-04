@@ -19,7 +19,10 @@ export default function Home() {
           <CustomWebcam />
         </div>
         <div className="flex justify-end p-4">
-          <button className="flex items-center bg-white rounded-lg w-24 p-2 sm:w-32 sm:p-4 hover:bg-gray-100">
+          <a
+            href="/pages/login"
+            className="flex items-center bg-white rounded-lg w-24 p-2 sm:w-32 sm:p-4 hover:bg-gray-100"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -37,7 +40,7 @@ export default function Home() {
             <p className="text-sm sm:text-base font-semibold text-red-700 ml-2">
               Log-out
             </p>
-          </button>
+          </a>
         </div>
       </div>
     </div>
