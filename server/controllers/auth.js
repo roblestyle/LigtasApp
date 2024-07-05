@@ -16,7 +16,6 @@ class AuthController {
         return res.status(200).send({
           user: {
             name: req.user.name,
-            username: req.user.username,
             id: req.user.id,
             email: req.user.email,
             profile_image: req.user.profile_image,

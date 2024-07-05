@@ -7,10 +7,6 @@ const User = sequelize.define("User", {
     allowNull: true,
     unique: true,
   },
-  username: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   user_password: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -24,7 +20,7 @@ const User = sequelize.define("User", {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   profile_image: {
     type: DataTypes.STRING, // Assuming you store the URL to the profile image

@@ -85,7 +85,10 @@ export default function Table() {
                     />
                   )}
                 </td>
-                <td className="px-6 py-4">{user.name}</td>
+                <td className="px-6 py-4">
+                  {user.name ? user.name : user.username}
+                </td>
+
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.createdAt}</td>
                 <td className="px-6 py-4 text-right">

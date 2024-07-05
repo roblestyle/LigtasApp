@@ -17,9 +17,14 @@ function userlogin() {
         user_password,
       });
 
-      console.log("Login successful:", response.data);
-      // Optionally handle success (redirect, show message, etc.)
-      window.location.href = "/pages/home"; // Redirect to home on successful login
+      // Check the structure of response.data to ensure it contains a valid token
+      console.log(response.data);
+
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        window.location.href = `/pages/home/`;
+      }
     } catch (error) {
       console.error("Login failed:", error);
       if (error.response && error.response.status === 401) {

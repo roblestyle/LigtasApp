@@ -1,9 +1,45 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomWebcam from "@/app/components/home/customwebcam";
 import Homebg from "@/app/components/home/homebg";
+import axios from "../../api/axios";
+import { jwtDecode } from "jwt-decode";
 
 export default function Home() {
+  const [userName, setUserName] = useState(null);
+
+  const handleSubmit = () => {
+    // Perform logout actions here, such as clearing localStorage, redirecting, etc.
+    localStorage.removeItem("token");
+    window.location.href = "/"; // Redirect to the login or home page
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    // Check if token exists and is valid
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+
+        // Assuming decodedToken has required fields like 'name'
+        setUserName(decodedToken.name);
+
+        // Store token in localStorage for persistence
+        localStorage.setItem("token", token);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        redirectToLogin();
+      }
+    }
+  }, []);
+
+  const redirectToLogin = () => {
+    // Redirect to login page if token is invalid or not present
+    window.location.href = "/";
+  };
+
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       <div className="fixed inset-0 z-0">
@@ -12,15 +48,15 @@ export default function Home() {
       <div className="relative z-10 flex flex-col h-full justify-between">
         <div className="flex justify-center p-4 sm:p-10">
           <h1 className="text-xl sm:text-3xl text-white font-semibold">
-            Hello
+            Hello, {userName || "Guest"}
           </h1>
         </div>
         <div className="flex-grow flex items-center justify-center pb-4 sm:pb-14">
           <CustomWebcam />
         </div>
         <div className="flex justify-end p-4">
-          <a
-            href="/pages/login"
+          <button
+            onClick={handleSubmit}
             className="flex items-center bg-white rounded-lg w-24 p-2 sm:w-32 sm:p-4 hover:bg-gray-100"
           >
             <svg
@@ -40,7 +76,7 @@ export default function Home() {
             <p className="text-sm sm:text-base font-semibold text-red-700 ml-2">
               Log-out
             </p>
-          </a>
+          </button>
         </div>
       </div>
     </div>

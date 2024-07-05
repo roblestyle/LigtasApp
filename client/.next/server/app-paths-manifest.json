@@ -1,8 +1,7 @@
 {
-  "/pages/home/page": "app/pages/home/page.js",
-  "/pages/admin/accounts/page": "app/pages/admin/accounts/page.js",
-  "/pages/admin/maps/page": "app/pages/admin/maps/page.js",
-  "/pages/login/page": "app/pages/login/page.js",
   "/page": "app/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js"
+  "/pages/home/page": "app/pages/home/page.js",
+  "/pages/login/page": "app/pages/login/page.js",
+  "/pages/admin/accounts/page": "app/pages/admin/accounts/page.js",
+  "/pages/admin/maps/page": "app/pages/admin/maps/page.js"
 }

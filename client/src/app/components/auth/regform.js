@@ -2,29 +2,32 @@
 
 import React, { useState } from "react";
 import axios from "../../api/axios";
+import { decode } from "jwt-decode"; // Import jwt-decode library for decoding JWT tokens
 
 function Regform() {
-  const [username, setName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [user_password, setPassword] = useState("");
+  const [user_password, setUserPassword] = useState("");
+  const [registrationError, setRegistrationError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const response = await axios.post("/auth/register", {
-        username,
+        name,
         email,
         user_password,
       });
-      {
-        timeout: 5000;
-      }
 
-      console.log("Registration successful:", response.data);
-      // Optionally handle success (redirect, show message, etc.)
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        window.location.href = `/pages/home/`;
+      }
     } catch (error) {
       console.error("Registration failed:", error);
+      setRegistrationError("Registration failed. Please try again later.");
       // Handle error (show error message, etc.)
     }
   };
@@ -62,7 +65,7 @@ function Regform() {
                   <input
                     type="text"
                     id="name"
-                    value={username}
+                    value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-3"
                     placeholder="Enter Name"
@@ -101,7 +104,7 @@ function Regform() {
                 type="password"
                 id="password"
                 value={user_password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setUserPassword(e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 sm:p-3"
                 placeholder="Enter Password"
                 required
