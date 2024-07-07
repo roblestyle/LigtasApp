@@ -1,4 +1,5 @@
 {
-  "/pages/admin/maps/page": "app/pages/admin/maps/page.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/pages/login/page": "app/pages/login/page.js",
+  "/pages/home/page": "app/pages/home/page.js"
 }

@@ -1,6 +1,7 @@
 // components/WebcamComponent.js
 import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
+import axios from "../../api/axios";
 
 const WebcamComponent = () => {
   const webcamRef = useRef(null);
@@ -14,7 +15,28 @@ const WebcamComponent = () => {
   const capture = () => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
-      console.log(imageSrc); // You can set this to state or send it to the server
+
+      // Convert Base64 image to a blob
+      fetch(imageSrc)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const formData = new FormData();
+          formData.append("image", blob, "webcam-image.jpg"); // Append the blob as "image" with a filename
+
+          // Axios POST request
+          axios
+            .post("/api/upload", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((response) => {
+              console.log("Image uploaded successfully:", response.data);
+            })
+            .catch((error) => {
+              console.error("Error uploading image:", error);
+            });
+        });
     }
   };
 
