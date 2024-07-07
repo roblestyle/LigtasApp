@@ -19,6 +19,7 @@ const LeafletMap = () => {
   }, []);
 
   return (
+    //Add an image to the popup
     <MapContainer
       center={[13.75, 121.05]}
       zoom={13}
@@ -27,7 +28,14 @@ const LeafletMap = () => {
       <TileLayer url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png" />
       <Marker position={[13.75, 121.05]}>
         <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
+          <div>
+            <img
+              src="https://example.com/path/to/image.jpg"
+              alt="Popup Image"
+              style={{ width: "100%" }}
+            />
+            <p>Description for the image or location.</p>
+          </div>
         </Popup>
       </Marker>
     </MapContainer>
