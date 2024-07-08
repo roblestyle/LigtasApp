@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 export default function Home() {
   const [userName, setUserName] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const handleSubmit = () => {
     // Perform logout actions here, such as clearing localStorage, redirecting, etc.
@@ -25,6 +26,7 @@ export default function Home() {
 
         // Assuming decodedToken has required fields like 'name'
         setUserName(decodedToken.name);
+        setUserId(decodedToken.id);
 
         // Store token in localStorage for persistence
         localStorage.setItem("token", token);
@@ -52,7 +54,7 @@ export default function Home() {
           </h1>
         </div>
         <div className="flex-grow flex items-center justify-center pb-4 sm:pb-14">
-          <CustomWebcam />
+          <CustomWebcam user={userId} />
         </div>
         <div className="flex justify-end p-4">
           <button

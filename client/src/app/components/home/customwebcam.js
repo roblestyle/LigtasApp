@@ -1,9 +1,9 @@
-// components/WebcamComponent.js
 import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import axios from "../../api/axios";
+import jwtDecode from "jwt-decode";
 
-const WebcamComponent = () => {
+const WebcamComponent = ({ user }) => {
   const webcamRef = useRef(null);
   const [error, setError] = useState(null);
 
@@ -13,32 +13,60 @@ const WebcamComponent = () => {
   };
 
   const capture = () => {
-    if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-
-      // Convert Base64 image to a blob
-      fetch(imageSrc)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const formData = new FormData();
-          formData.append("image", blob, "webcam-image.jpg"); // Append the blob as "image" with a filename
-
-          // Axios POST request
-          axios
-            .post("/api/upload", formData, {
-              // Change this line to match the correct route
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            })
-            .then((response) => {
-              console.log("Image uploaded successfully:", response.data);
-            })
-            .catch((error) => {
-              console.error("Error uploading image:", error);
-            });
-        });
+    if (!webcamRef.current) {
+      setError("Webcam not available.");
+      return;
     }
+
+    const imageSrc = webcamRef.current.getScreenshot();
+
+    fetch(imageSrc)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const formData = new FormData();
+        formData.append("image", blob, "webcam-image.jpg");
+        formData.append("userId", user);
+
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              formData.append("latitude", position.coords.latitude.toString());
+              formData.append(
+                "longitude",
+                position.coords.longitude.toString()
+              );
+
+              axios
+                .post("/api/upload", formData, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${user}`, // Use userId directly as token
+                  },
+                })
+                .then((response) => {
+                  console.log(
+                    "Image and location uploaded successfully:",
+                    response.data
+                  );
+                })
+                .catch((error) => {
+                  console.error("Error uploading image and location:", error);
+                });
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+              setError("Error getting location.");
+            }
+          );
+        } else {
+          console.log("Geolocation is not supported by this browser.");
+          setError("Geolocation is not supported.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error capturing image:", error);
+        setError("Error capturing image.");
+      });
   };
 
   return (
