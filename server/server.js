@@ -5,6 +5,7 @@ const session = require("express-session");
 const cors = require("cors");
 const passport = require("./config/passport");
 const authRoutes = require("./routes/auth");
+const uploadRouter = require("./routes/upload");
 const apiRoutes = require("./routes/api");
 const sequelize = require("./config/database");
 
@@ -24,6 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes);
+app.use("/api", uploadRouter);
 
 const startServer = async () => {
   try {

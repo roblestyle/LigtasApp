@@ -26,6 +26,7 @@ const WebcamComponent = () => {
           // Axios POST request
           axios
             .post("/api/upload", formData, {
+              // Change this line to match the correct route
               headers: {
                 "Content-Type": "multipart/form-data",
               },
