@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -8,6 +8,7 @@ import axios from "../../../api/axios";
 
 const LeafletMap = () => {
   const [locations, setLocations] = useState([]);
+  const mapRef = useRef(null);
 
   useEffect(() => {
     // Customizing default Leaflet marker icons
@@ -25,6 +26,13 @@ const LeafletMap = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Ensure map updates size after initial render
+    if (mapRef.current && mapRef.current.leafletElement) {
+      mapRef.current.leafletElement.invalidateSize();
+    }
+  }, [locations]); // Invalidate size when locations change
+
   const fetchData = async () => {
     try {
       const response = await axios.get("/api/location-data");
@@ -39,6 +47,9 @@ const LeafletMap = () => {
       center={[13.75, 121.05]}
       zoom={13}
       style={{ height: "480px", width: "100%" }}
+      whenCreated={(mapInstance) => {
+        mapRef.current = mapInstance;
+      }}
     >
       <TileLayer url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png" />
       {locations.map((location) => (
