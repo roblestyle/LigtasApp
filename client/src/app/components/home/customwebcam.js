@@ -2,10 +2,12 @@ import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import axios from "../../api/axios";
 import jwtDecode from "jwt-decode";
+import Popup from "./Popup"; // Adjust the path based on your file structure
 
 const WebcamComponent = ({ user }) => {
   const webcamRef = useRef(null);
   const [error, setError] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleUserMediaError = (error) => {
     console.error("Error accessing webcam:", error);
@@ -48,9 +50,11 @@ const WebcamComponent = ({ user }) => {
                     "Image and location uploaded successfully:",
                     response.data
                   );
+                  setIsPopupOpen(true); // Show popup on success
                 })
                 .catch((error) => {
                   console.error("Error uploading image and location:", error);
+                  setError("Error uploading image and location.");
                 });
             },
             (error) => {
@@ -119,6 +123,8 @@ const WebcamComponent = ({ user }) => {
           Take a picture
         </p>
       </div>
+
+      <Popup isOpen={isPopupOpen} setIsOpen={setIsPopupOpen} />
     </div>
   );
 };
