@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const User = require("../model/user"); // Adjust the path as necessary
 const UploadedImage = require("../model/uploadedImage"); // Adjust the path as necessary
 const router = express.Router();
 
@@ -64,8 +65,23 @@ router.post("/upload", upload.single("image"), async (req, res) => {
 
 router.get("/location-data", async (req, res) => {
   try {
-    const locations = await UploadedImage.findAll();
-    res.json(locations);
+    const locations = await UploadedImage.findAll({
+      include: {
+        model: User, // Include the User model
+        attributes: ["name"], // Select the 'name' attribute from User
+      },
+    });
+
+    // Format the response data to send to the client
+    const formattedLocations = locations.map((location) => ({
+      id: location.id,
+      image: location.image,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      userName: location.User.name, // Access the User's name
+    }));
+
+    res.json(formattedLocations);
   } catch (error) {
     console.error("Error fetching location data:", error);
     res.status(500).send("Error fetching location data.");

@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "../../../api/axios";
+import "/src/app/globals.css";
 
 const LeafletMap = () => {
   const [locations, setLocations] = useState([]);
@@ -78,9 +79,11 @@ const LeafletMap = () => {
               <img
                 src={`http://localhost:5000${location.image}`}
                 alt="Popup Image"
-                style={{ width: "100%" }}
+                className="w-full text-white mb-4"
               />
-              <p>Location uploaded by user {location.userId}</p>
+              <p className="text-white">
+                Location uploaded by {location.userName}
+              </p>
             </div>
           </Popup>
         </Marker>

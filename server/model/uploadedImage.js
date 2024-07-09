@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const User = require("./user");
 
 const UploadedImage = sequelize.define("UploadedImage", {
   id: {
@@ -28,5 +29,7 @@ const UploadedImage = sequelize.define("UploadedImage", {
     },
   },
 });
+
+UploadedImage.belongsTo(User, { foreignKey: "userId" });
 
 module.exports = UploadedImage;

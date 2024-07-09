@@ -1069,6 +1069,13 @@ video {
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.leaflet-popup-content-wrapper {
+  background-color: #5a0c0c; /* Light khaki background */
+}
+.leaflet-popup-tip-container {
+  display: none; /* Optional: hides the popup tip arrow */
+}
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
