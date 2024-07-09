@@ -79,7 +79,7 @@ const LeafletMap = () => {
               <img
                 src={`http://localhost:5000${location.image}`}
                 alt="Popup Image"
-                className="w-full text-white mb-4"
+                className="w-full text-white mb-5 rounded-lg"
               />
               <p className="text-white">
                 Location uploaded by {location.userName}
