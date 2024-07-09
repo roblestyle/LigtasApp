@@ -62,4 +62,14 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   }
 });
 
+router.get("/location-data", async (req, res) => {
+  try {
+    const locations = await UploadedImage.findAll();
+    res.json(locations);
+  } catch (error) {
+    console.error("Error fetching location data:", error);
+    res.status(500).send("Error fetching location data.");
+  }
+});
+
 module.exports = router;

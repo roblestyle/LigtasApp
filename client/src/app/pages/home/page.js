@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CustomWebcam from "@/app/components/home/customwebcam";
 import Homebg from "@/app/components/home/homebg";
 import axios from "../../api/axios";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Assuming correct import for jwt-decode
 
 export default function Home() {
   const [userName, setUserName] = useState(null);
@@ -12,34 +12,46 @@ export default function Home() {
   const handleSubmit = () => {
     // Perform logout actions here, such as clearing localStorage, redirecting, etc.
     localStorage.removeItem("token");
-    window.location.href = "/"; // Redirect to the login or home page
+    window.location.href = "/pages/login/"; // Redirect to the login or home page
   };
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+    // Attempt to get token from localStorage
+    let token = localStorage.getItem("token");
 
-    // Check if token exists and is valid
+    // If token is not found in localStorage, try to get it from URL parameters
+    if (!token) {
+      const urlParams = new URLSearchParams(window.location.search);
+      token = urlParams.get("token");
+    }
+
+    // Check if token exists
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
 
-        // Assuming decodedToken has required fields like 'name'
+        // Assuming decodedToken has required fields like 'name' and 'id'
         setUserName(decodedToken.name);
         setUserId(decodedToken.id);
 
-        // Store token in localStorage for persistence
+        // Store token in localStorage for persistence (optional, already stored)
         localStorage.setItem("token", token);
       } catch (error) {
-        console.error("Invalid token:", error);
+        console.error("Error decoding token:", error);
         redirectToLogin();
+        return; // Exit early to prevent further execution
       }
+    } else {
+      console.error("Token is missing"); // Log error if token is missing
+      redirectToLogin();
+      return; // Exit early if token is missing
     }
   }, []);
+  // Empty dependency array ensures useEffect runs only once
 
   const redirectToLogin = () => {
     // Redirect to login page if token is invalid or not present
-    window.location.href = "/";
+    window.location.href = "/pages/login/";
   };
 
   return (

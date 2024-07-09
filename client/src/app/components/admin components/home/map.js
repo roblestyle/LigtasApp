@@ -28,14 +28,24 @@ const LeafletMap = () => {
 
   useEffect(() => {
     // Ensure map updates size after initial render
-    if (mapRef.current && mapRef.current.leafletElement) {
-      mapRef.current.leafletElement.invalidateSize();
+    if (mapRef.current) {
+      mapRef.current.invalidateSize();
     }
-  }, [locations]); // Invalidate size when locations change
+
+    // Adjust map bounds to fit all markers
+    if (locations.length && mapRef.current) {
+      const bounds = locations.map((location) => [
+        parseFloat(location.latitude),
+        parseFloat(location.longitude),
+      ]);
+      mapRef.current.fitBounds(bounds);
+    }
+  }, [locations]);
 
   const fetchData = async () => {
     try {
       const response = await axios.get("/api/location-data");
+      console.log("Fetched locations:", response.data);
       setLocations(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -51,11 +61,17 @@ const LeafletMap = () => {
         mapRef.current = mapInstance;
       }}
     >
-      <TileLayer url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png" />
+      <TileLayer
+        url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> contributors'
+      />
       {locations.map((location) => (
         <Marker
           key={location.id}
-          position={[location.latitude, location.longitude]}
+          position={[
+            parseFloat(location.latitude),
+            parseFloat(location.longitude),
+          ]}
         >
           <Popup>
             <div>
