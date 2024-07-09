@@ -31,9 +31,6 @@ export default function page() {
             </p>
             <h1 className="font-semibold text-white text-md">Map Dashboard</h1>
           </div>
-          <div className="my-4">
-            <Admincard />
-          </div>
           <div className="w-full h-64 my-7">
             <LeafletMap />
           </div>

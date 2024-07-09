@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import axios from "../../api/axios";
 import jwtDecode from "jwt-decode";
-import Popup from "./Popup"; // Adjust the path based on your file structure
+import Popup from "./popup"; // Adjust the path based on your file structure
 
 const WebcamComponent = ({ user }) => {
   const webcamRef = useRef(null);
