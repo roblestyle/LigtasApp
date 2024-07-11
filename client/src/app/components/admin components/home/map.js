@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "../../../api/axios";
 import "/src/app/globals.css";
+import AdminCard from "./admincard";
 
 const LeafletMap = () => {
   const [locations, setLocations] = useState([]);
@@ -54,41 +55,46 @@ const LeafletMap = () => {
   };
 
   return (
-    <MapContainer
-      center={[13.75, 121.05]}
-      zoom={13}
-      style={{ height: "480px", width: "100%" }}
-      whenCreated={(mapInstance) => {
-        mapRef.current = mapInstance;
-      }}
-    >
-      <TileLayer
-        url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> contributors'
-      />
-      {locations.map((location) => (
-        <Marker
-          key={location.id}
-          position={[
-            parseFloat(location.latitude),
-            parseFloat(location.longitude),
-          ]}
-        >
-          <Popup>
-            <div>
-              <img
-                src={`http://localhost:5000${location.image}`}
-                alt="Popup Image"
-                className="w-full text-white mb-5 rounded-lg"
-              />
-              <p className="text-white">
-                Location uploaded by {location.userName}
-              </p>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <>
+      <div className="my-4">
+        <AdminCard totalMarkers={locations.length} />
+      </div>
+      <MapContainer
+        center={[13.75, 121.05]}
+        zoom={13}
+        style={{ height: "480px", width: "100%" }}
+        whenCreated={(mapInstance) => {
+          mapRef.current = mapInstance;
+        }}
+      >
+        <TileLayer
+          url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> contributors'
+        />
+        {locations.map((location) => (
+          <Marker
+            key={location.id}
+            position={[
+              parseFloat(location.latitude),
+              parseFloat(location.longitude),
+            ]}
+          >
+            <Popup>
+              <div>
+                <img
+                  src={`http://localhost:5000${location.image}`}
+                  alt="Popup Image"
+                  className="w-full text-white mb-5 rounded-lg"
+                />
+                <p className="text-white">
+                  Location uploaded by {location.userName}
+                </p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </>
   );
 };
 

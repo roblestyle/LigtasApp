@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import React from "react";
 import Sidebar from "@/app/components/admin components/home/sidebar";
 import Dashboardbg from "@/app/components/admin components/home/dashboardbg";
-import Admincard from "@/app/components/admin components/home/admincard";
 
 const LeafletMap = dynamic(
   () => import("@/app/components/admin components/home/map"),
@@ -18,7 +17,6 @@ export default function page() {
       <div className="absolute inset-0 z-0">
         <Dashboardbg />
       </div>
-
       <div className="flex flex-rows">
         <div className="relative flex justify-start p-4 items-center h-screen z-10">
           <Sidebar />
