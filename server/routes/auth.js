@@ -114,11 +114,11 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     // Assuming you have access to user information in req.user
-    const { id, name, email } = req.user;
+    const { id, name, profile_image, email } = req.user;
 
     // Generate JWT token
     const token = jwt.sign(
-      { id, name, email },
+      { id, name, profile_image, email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" } // Token expiry time
     );
