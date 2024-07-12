@@ -1,22 +1,53 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CustomWebcam from "@/app/components/home/customwebcam";
 import Homebg from "@/app/components/home/homebg";
 import axios from "../../api/axios";
-import { jwtDecode } from "jwt-decode"; // Assuming correct import for jwt-decode
+import { jwtDecode } from "jwt-decode"; // Correct import for jwt-decode
 
 export default function Home() {
   const [userName, setUserName] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleSubmit = () => {
     // Perform logout actions here, such as clearing localStorage, redirecting, etc.
     localStorage.removeItem("token");
-    window.location.href = "/pages/login/"; // Redirect to the login or home page
+    window.location.href = "/pages/login/";
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`/api/users/${userId}`, {
+        headers: { Authorization: token },
+      });
+      handleSubmit(); // Logout after account deletion
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
   };
 
   useEffect(() => {
-    // Attempt to get token from localStorage
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
     let token = localStorage.getItem("token");
 
     // If token is not found in localStorage, try to get it from URL parameters
@@ -33,8 +64,7 @@ export default function Home() {
         // Assuming decodedToken has required fields like 'name' and 'id'
         setUserName(decodedToken.name);
         setUserId(decodedToken.id);
-
-        // Store token in localStorage for persistence (optional, already stored)
+        setProfileImage(decodedToken.profile_image);
         localStorage.setItem("token", token);
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -60,12 +90,36 @@ export default function Home() {
         <Homebg />
       </div>
       <div className="relative z-10 flex flex-col h-full justify-between">
-        <div className="flex justify-center p-4 sm:p-10">
-          <h1 className="text-xl sm:text-3xl text-white font-semibold">
+        <div className="flex justify-between items-center p-4 sm:p-10">
+          <h1 className="text-lg sm:text-xl text-white font-semibold">
             Hello, {userName || "Guest"}
           </h1>
+          <div className="relative" ref={dropdownRef}>
+            <img
+              src={profileImage}
+              alt="Profile"
+              className="w-14 h-14 sm:w-14 sm:h-14 rounded-md cursor-pointer"
+              onClick={toggleDropdown}
+            />
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                <button
+                  onClick={handleSubmit}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                >
+                  Log out
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"
+                >
+                  Delete Account
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex-grow flex items-center justify-center pb-4 sm:pb-14">
+        <div className="flex-grow flex items-center justify-center pb-2 sm:pb-7">
           <CustomWebcam user={userId} />
         </div>
         <div className="flex justify-end p-4">
