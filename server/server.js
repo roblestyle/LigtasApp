@@ -9,6 +9,7 @@ const path = require("path");
 const uploadRouter = require("./routes/upload");
 const apiRoutes = require("./routes/api");
 const sequelize = require("./config/database");
+const adminAuthRoutes = require("./routes/adminauth");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(passport.session());
 app.use("/auth", authRoutes);
 app.use("/api", uploadRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/admin", adminAuthRoutes);
 
 const startServer = async () => {
   try {

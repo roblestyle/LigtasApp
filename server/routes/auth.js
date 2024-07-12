@@ -105,10 +105,6 @@ router.get(
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// Assuming you have configured Passport Google Strategy
-// passport.use(new GoogleStrategy(...));
-
-// Route for handling Google authentication redirect
 router.get(
   "/google/redirect",
   passport.authenticate("google", { failureRedirect: "/" }),

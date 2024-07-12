@@ -1,10 +1,18 @@
+"use client";
+
 import React from "react";
 
-export default function sidebar() {
+const Sidebar = () => {
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    // Redirect or perform any other action after logout
+    window.location.href = "/pages/admin/login"; // Redirect to login page
+  };
+
   return (
     <div className="h-full px-1 py-3 w-64 bg-red-950 rounded-xl p-4">
       <div className="flex flex-row items-center justify-center">
-        <img src="/logon1.png" className="w-13 h-12" />
+        <img src="/logon1.png" className="w-13 h-12" alt="Logo" />
         <p className="text-white font-semibold text-sm px-2">
           Batangas State University
         </p>
@@ -56,9 +64,9 @@ export default function sidebar() {
           </a>
         </li>
         <li>
-          <a
-            href="/"
-            className="flex items-center p-3 hover:text-red-950 rounded-lg text-white hover:bg-white"
+          <button
+            onClick={handleLogout}
+            className="flex items-center p-3 hover:text-red-950 rounded-lg text-white hover:bg-white w-full text-left"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -68,15 +76,17 @@ export default function sidebar() {
             >
               <path
                 fillRule="evenodd"
-                d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z"
+                d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z"
                 clipRule="evenodd"
               />
             </svg>
 
             <span className="flex-1 ms-3 whitespace-nowrap">Log-Out</span>
-          </a>
+          </button>
         </li>
       </ul>
     </div>
   );
-}
+};
+
+export default Sidebar;
