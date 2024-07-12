@@ -1,5 +1,7 @@
+"use client";
+
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "@/app/components/admin components/home/sidebar";
 import Dashboardbg from "@/app/components/admin components/home/dashboardbg";
 
@@ -10,7 +12,16 @@ const LeafletMap = dynamic(
   }
 );
 
-export default function page() {
+function MapsPage() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // Redirect to login if no token found
+      window.location.href = "/pages/admin/login";
+    }
+  }, []);
+
   return (
     <div className="relative h-screen w-screen">
       {/* Background Regcard */}
@@ -37,3 +48,5 @@ export default function page() {
     </div>
   );
 }
+
+export default MapsPage;

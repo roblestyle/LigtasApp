@@ -1,9 +1,20 @@
-import React from "react";
+"use client";
+
+import { React, useEffect } from "react";
 import Sidebar from "@/app/components/admin components/home/sidebar";
 import Dashboardbg from "@/app/components/admin components/home/dashboardbg";
 import Table from "@/app/components/admin components/home/table";
 
 export default function page() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // Redirect to login page if no token found
+      window.location.href = "/pages/admin/login";
+    }
+  }, []);
+
   return (
     <div className="relative h-screen w-screen">
       {/* Background Regcard */}
