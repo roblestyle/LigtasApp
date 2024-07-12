@@ -1,4 +1,6 @@
+const UploadedImage = require("../model/uploadedImage");
 const User = require("../model/user");
+require("dotenv").config();
 
 const createGoogleUser = async (profile) => {
   let user = await User.findOne({ where: { google_id: profile.id } });
@@ -22,7 +24,28 @@ const findById = async (id) => {
   }
 };
 
+const deleteUserById = async (userId) => {
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Delete uploaded images associated with the user
+    await UploadedImage.destroy({ where: { userId } });
+
+    // Delete the user from the database
+    await user.destroy();
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createGoogleUser,
   findById,
+  deleteUserById,
 };

@@ -1,3 +1,5 @@
+// components/Home.js
+
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import CustomWebcam from "@/app/components/home/customwebcam";
@@ -13,7 +15,6 @@ export default function Home() {
   const dropdownRef = useRef(null);
 
   const handleSubmit = () => {
-    // Perform logout actions here, such as clearing localStorage, redirecting, etc.
     localStorage.removeItem("token");
     window.location.href = "/pages/login/";
   };
@@ -21,7 +22,7 @@ export default function Home() {
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`/api/users/${userId}`, {
+      await axios.delete(`/api/${userId}`, {
         headers: { Authorization: token },
       });
       handleSubmit(); // Logout after account deletion
@@ -50,18 +51,14 @@ export default function Home() {
   useEffect(() => {
     let token = localStorage.getItem("token");
 
-    // If token is not found in localStorage, try to get it from URL parameters
     if (!token) {
       const urlParams = new URLSearchParams(window.location.search);
       token = urlParams.get("token");
     }
 
-    // Check if token exists
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-
-        // Assuming decodedToken has required fields like 'name' and 'id'
         setUserName(decodedToken.name);
         setUserId(decodedToken.id);
         setProfileImage(decodedToken.profile_image);
@@ -69,18 +66,14 @@ export default function Home() {
       } catch (error) {
         console.error("Error decoding token:", error);
         redirectToLogin();
-        return; // Exit early to prevent further execution
       }
     } else {
-      console.error("Token is missing"); // Log error if token is missing
+      console.error("Token is missing");
       redirectToLogin();
-      return; // Exit early if token is missing
     }
   }, []);
-  // Empty dependency array ensures useEffect runs only once
 
   const redirectToLogin = () => {
-    // Redirect to login page if token is invalid or not present
     window.location.href = "/pages/login/";
   };
 
@@ -103,12 +96,6 @@ export default function Home() {
             />
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                <button
-                  onClick={handleSubmit}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                >
-                  Log out
-                </button>
                 <button
                   onClick={handleDeleteAccount}
                   className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"
