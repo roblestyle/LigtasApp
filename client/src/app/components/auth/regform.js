@@ -41,7 +41,7 @@ function Regform() {
             className="w-16 h-15 sm:w-64 sm:h-63 mt-4 sm:my-4"
             alt="Logo"
           />
-          <h1 className="text-xl sm:text-4xl font-bold text-white sm:mb-2 text-center sm:text-left">
+          <h1 className="w-full text-xl sm:text-4xl font-bold text-white sm:mb-2 text-center">
             Batangas State University
           </h1>
           <p className="text-lg sm:text-xl font-semibold text-white text-center sm:text-left">
