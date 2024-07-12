@@ -4,6 +4,7 @@ import api from "../../../api/axios";
 
 export default function Table() {
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -17,6 +18,14 @@ export default function Table() {
 
     fetchUsers();
   }, []);
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -50,6 +59,8 @@ export default function Table() {
                   id="table-search"
                   className="block py-2 ps-10 text-sm text-gray-700 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                 />
               </div>
             </div>
@@ -74,7 +85,7 @@ export default function Table() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
+            {filteredUsers.map((user, index) => (
               <tr key={index} className="bg-white border-b text-gray-600">
                 <td className="px-6 py-4 text-center">
                   {user.profile_image && (
@@ -88,7 +99,6 @@ export default function Table() {
                 <td className="px-6 py-4">
                   {user.name ? user.name : user.username}
                 </td>
-
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.createdAt}</td>
                 <td className="px-6 py-4 text-right">
