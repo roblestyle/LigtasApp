@@ -6,4 +6,4 @@ node_modules
 uploads
 /client/.next
 
-.env
+/server/.env
