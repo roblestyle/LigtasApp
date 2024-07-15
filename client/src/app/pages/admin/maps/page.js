@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "@/app/components/admin components/home/sidebar";
 import Dashboardbg from "@/app/components/admin components/home/dashboardbg";
 
@@ -13,12 +13,16 @@ const LeafletMap = dynamic(
 );
 
 function MapsPage() {
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const [token, setToken] = useState(null);
 
-    if (!token) {
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+
+    if (!storedToken) {
       // Redirect to login if no token found
       window.location.href = "/pages/admin/login";
+    } else {
+      setToken(storedToken);
     }
   }, []);
 
@@ -41,7 +45,7 @@ function MapsPage() {
             <h1 className="font-semibold text-white text-md">Map Dashboard</h1>
           </div>
           <div className="w-full h-64 my-7">
-            <LeafletMap />
+            {token && <LeafletMap token={token} />}
           </div>
         </div>
       </div>

@@ -10,6 +10,8 @@ const uploadRouter = require("./routes/upload");
 const apiRoutes = require("./routes/api");
 const sequelize = require("./config/database");
 const adminAuthRoutes = require("./routes/adminauth");
+const helpRouter = require("./routes/help");
+const notificationRouter = require("./routes/notification");
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use("/auth", authRoutes);
 app.use("/api", uploadRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/admin", adminAuthRoutes);
+app.use("/api/send-help", helpRouter);
+app.use("/api/notifications", notificationRouter);
 
 const startServer = async () => {
   try {

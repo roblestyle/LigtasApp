@@ -88,4 +88,35 @@ router.get("/location-data", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the uploaded image by ID
+    const uploadedImage = await UploadedImage.findByPk(id, {
+      include: {
+        model: User,
+        attributes: ["id", "name"], // Include User model with specific attributes
+      },
+    });
+
+    if (!uploadedImage) {
+      return res.status(404).json({ error: "Uploaded image not found" });
+    }
+
+    // Extract relevant user information
+    const userData = {
+      userId: uploadedImage.userId,
+      userName: uploadedImage.User.name,
+      userEmail: uploadedImage.User.email,
+      // Add more user attributes as needed
+    };
+
+    res.status(200).json(userData);
+  } catch (error) {
+    console.error("Error fetching uploaded image data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;

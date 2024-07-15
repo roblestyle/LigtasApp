@@ -8,8 +8,9 @@ import axios from "../../../api/axios";
 import "/src/app/globals.css";
 import AdminCard from "./admincard";
 
-const LeafletMap = () => {
+const LeafletMap = ({ token }) => {
   const [locations, setLocations] = useState([]);
+  const [notifiedLocations, setNotifiedLocations] = useState(new Set());
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -46,11 +47,33 @@ const LeafletMap = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/location-data");
+      const response = await axios.get("/api/location-data", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Fetched locations:", response.data);
       setLocations(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleSendHelp = async (locationId) => {
+    try {
+      const response = await axios.post(
+        `/api/send-help/${locationId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Notification sent successfully:", response.data);
+      setNotifiedLocations((prev) => new Set(prev).add(locationId));
+    } catch (error) {
+      console.error("Error sending help:", error);
     }
   };
 
@@ -80,7 +103,7 @@ const LeafletMap = () => {
             ]}
           >
             <Popup>
-              <div>
+              <div className="text-center">
                 <img
                   src={`http://localhost:5000${location.image}`}
                   alt="Popup Image"
@@ -89,6 +112,19 @@ const LeafletMap = () => {
                 <p className="text-white">
                   Location uploaded by {location.userName}
                 </p>
+                <button
+                  onClick={() => handleSendHelp(location.id)}
+                  className={`${
+                    notifiedLocations.has(location.id)
+                      ? "bg-gray-500 cursor-not-allowed"
+                      : "bg-red-700 hover:bg-red-800"
+                  } text-white font-bold py-2 px-4 rounded mt-3`}
+                  disabled={notifiedLocations.has(location.id)}
+                >
+                  {notifiedLocations.has(location.id)
+                    ? "Help sent"
+                    : "Send Help"}
+                </button>
               </div>
             </Popup>
           </Marker>
