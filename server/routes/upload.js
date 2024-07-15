@@ -119,4 +119,25 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.delete("/delete-marker/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the marker to delete
+    const markerToDelete = await UploadedImage.findByPk(id);
+    if (!markerToDelete) {
+      return res.status(404).json({ error: "Marker not found" });
+    }
+
+    // Perform deletion
+    await markerToDelete.destroy();
+
+    // Respond with success message
+    res.json({ message: "Marker deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting marker:", error);
+    res.status(500).json({ error: "Error deleting marker" });
+  }
+});
+
 module.exports = router;

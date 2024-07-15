@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -10,7 +8,12 @@ import AdminCard from "./admincard";
 
 const LeafletMap = ({ token }) => {
   const [locations, setLocations] = useState([]);
-  const [notifiedLocations, setNotifiedLocations] = useState(new Set());
+  const [notifiedLocations, setNotifiedLocations] = useState(() => {
+    const savedNotifiedLocations = localStorage.getItem("notifiedLocations");
+    return savedNotifiedLocations
+      ? new Set(JSON.parse(savedNotifiedLocations))
+      : new Set();
+  });
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -30,6 +33,12 @@ const LeafletMap = ({ token }) => {
   }, []);
 
   useEffect(() => {
+    // Save notifiedLocations to local storage whenever it changes
+    localStorage.setItem(
+      "notifiedLocations",
+      JSON.stringify(Array.from(notifiedLocations))
+    );
+
     // Ensure map updates size after initial render
     if (mapRef.current) {
       mapRef.current.invalidateSize();
@@ -43,7 +52,7 @@ const LeafletMap = ({ token }) => {
       ]);
       mapRef.current.fitBounds(bounds);
     }
-  }, [locations]);
+  }, [locations, notifiedLocations]);
 
   const fetchData = async () => {
     try {
@@ -74,6 +83,23 @@ const LeafletMap = ({ token }) => {
       setNotifiedLocations((prev) => new Set(prev).add(locationId));
     } catch (error) {
       console.error("Error sending help:", error);
+    }
+  };
+
+  const handleDeleteMarker = async (locationId) => {
+    try {
+      const response = await axios.delete(`/api/delete-marker/${locationId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Marker deleted successfully:", response.data);
+      // Remove the deleted marker from locations state
+      setLocations((prevLocations) =>
+        prevLocations.filter((location) => location.id !== locationId)
+      );
+    } catch (error) {
+      console.error("Error deleting marker:", error);
     }
   };
 
@@ -125,6 +151,14 @@ const LeafletMap = ({ token }) => {
                     ? "Help sent"
                     : "Send Help"}
                 </button>
+                {notifiedLocations.has(location.id) && (
+                  <button
+                    onClick={() => handleDeleteMarker(location.id)}
+                    className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded mt-3 ml-3"
+                  >
+                    Delete Marker
+                  </button>
+                )}
               </div>
             </Popup>
           </Marker>
