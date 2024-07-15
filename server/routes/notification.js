@@ -1,7 +1,6 @@
-// routes/notifications.js
-
 const express = require("express");
 const router = express.Router();
+const moment = require("moment"); // Import Moment.js
 const Notification = require("../model/notification");
 const User = require("../model/user"); // Adjust as per your setup
 
@@ -26,7 +25,14 @@ router.get("/:userId", async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    res.json({ notifications });
+    // Format createdAt using Moment.js 'LT' format
+    const formattedNotifications = notifications.map((notification) => ({
+      id: notification.id,
+      message: notification.message,
+      createdAt: moment(notification.createdAt).format("LT"), // Format createdAt
+    }));
+
+    res.json({ notifications: formattedNotifications });
   } catch (error) {
     console.error("Error fetching notifications:", error);
     res.status(500).json({ message: "Failed to fetch notifications" });

@@ -63,13 +63,15 @@ export default function Home() {
     }
   };
 
-  // Define fetchNotifications here
+  // Fetch notifications including createdBy and createdAt
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`/api/notifications/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      // Assuming response.data.notifications is an array of objects with id, message, createdBy, createdAt fields
       setNotifications(response.data.notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -157,9 +159,12 @@ export default function Home() {
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className="px-4 py-2 hover:bg-gray-100"
+                        className="px-4 py-2 hover:bg-gray-100 flex justify-between items-center"
                       >
-                        <p className="text-sm">{notification.message}</p>
+                        <p className="text-sm mr-2">{notification.message}</p>
+                        <p className="text-xs text-gray-500">
+                          {formatNotificationTime(notification.createdAt)}
+                        </p>
                       </div>
                     ))
                   ) : (
@@ -225,3 +230,9 @@ export default function Home() {
     </div>
   );
 }
+
+// Helper function to format notification time
+const formatNotificationTime = (time) => {
+  // Implement your formatting logic here, e.g., using Moment.js
+  return `[${time}]`;
+};
