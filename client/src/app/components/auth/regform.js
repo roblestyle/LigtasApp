@@ -2,22 +2,47 @@
 
 import React, { useState } from "react";
 import axios from "../../api/axios";
-import { decode } from "jwt-decode"; // Import jwt-decode library for decoding JWT tokens
 
 function Regform() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [user_password, setUserPassword] = useState("");
   const [registrationError, setRegistrationError] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
+      // Check if profile image is provided
+      let profileImageUrl = profileImage; // Assume profileImage is a state variable holding the image URL
+
+      if (!profileImageUrl) {
+        // Extract initials from the name
+        const initials = name
+          .split(" ")
+          .map((word) => word[0])
+          .join("")
+          .toUpperCase();
+
+        // Fetch SVG from DiceBear
+        const response = await axios.get(
+          `https://api.dicebear.com/9.x/initials/svg?seed=${initials}`,
+          {
+            responseType: "text", // Ensure the response is treated as text
+          }
+        );
+
+        // Encode SVG to base64
+        const svgBase64 = Buffer.from(response.data).toString("base64");
+        profileImageUrl = `data:image/svg+xml;base64,${svgBase64}`;
+      }
+
       const response = await axios.post("/auth/register", {
         name,
         email,
         user_password,
+        profile_image: profileImageUrl,
       });
 
       if (response.status === 200) {

@@ -79,9 +79,6 @@ export default function Table() {
               <th scope="col" className="px-6 py-3">
                 DATE CREATED
               </th>
-              <th scope="col" className="px-6 py-3">
-                <span className="sr-only">Edit</span>
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -101,14 +98,6 @@ export default function Table() {
                 </td>
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.createdAt}</td>
-                <td className="px-6 py-4 text-right">
-                  <a
-                    href="#"
-                    className="font-medium text-red-900 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
               </tr>
             ))}
           </tbody>

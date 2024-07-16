@@ -4,9 +4,10 @@ const passport = require("passport");
 const router = express.Router();
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
 router.post("/register", async (req, res) => {
-  const { name, email, user_password } = req.body;
+  const { name, email, user_password, profile_image } = req.body;
 
   if (!name || !email || !user_password) {
     return res
@@ -20,6 +21,29 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email already registered" });
     }
 
+    // Fetch a random profile image from DiceBear if no profile image is provided
+    let profileImageUrl = profile_image;
+    if (!profileImageUrl) {
+      // Extract initials from the name
+      const initials = name
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase();
+
+      // Fetch SVG from DiceBear
+      const response = await axios.get(
+        `https://api.dicebear.com/9.x/initials/svg?seed=${initials}`,
+        {
+          responseType: "text", // Ensure the response is treated as text
+        }
+      );
+
+      // Encode SVG to base64
+      const svgBase64 = Buffer.from(response.data).toString("base64");
+      profileImageUrl = `data:image/svg+xml;base64,${svgBase64}`;
+    }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(user_password, 10);
 
@@ -28,6 +52,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       user_password: hashedPassword,
+      profile_image: profileImageUrl, // Save the DiceBear profile image URL
     });
 
     // Generate JWT token for the newly registered user
@@ -35,7 +60,7 @@ router.post("/register", async (req, res) => {
       {
         id: newUser.id,
         name: newUser.name,
-        profile_image: newUser.profile_image, // Add profile_image if available
+        profile_image: newUser.profile_image, // Include profile_image in the token payload
       },
       process.env.JWT_SECRET,
       {
