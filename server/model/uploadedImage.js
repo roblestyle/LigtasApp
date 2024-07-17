@@ -32,6 +32,10 @@ UploadedImage.init(
       },
       onDelete: "CASCADE", // Cascade delete when User is deleted
     },
+    isNoified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize, // Pass the Sequelize instance
