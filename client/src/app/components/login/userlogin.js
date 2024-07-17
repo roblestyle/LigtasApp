@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import axios from "../../api/axios";
+import { jwtDecode } from "jwt-decode";
 
 function UserLogin() {
   // Capitalize the component name
@@ -24,6 +25,9 @@ function UserLogin() {
       if (response.status === 200 && response.data.token) {
         const token = response.data.token;
         localStorage.setItem("token", token);
+
+        const decodedToken = jwtDecode(token);
+        localStorage.setItem("profileImage", decodedToken.profile_image);
         window.location.href = `/pages/home/`;
       } else {
         setLoginError("Login failed. Please try again later.");

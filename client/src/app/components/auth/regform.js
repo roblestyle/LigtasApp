@@ -14,46 +14,36 @@ function Regform() {
     event.preventDefault();
 
     try {
-      // Check if profile image is provided
-      let profileImageUrl = profileImage; // Assume profileImage is a state variable holding the image URL
+      let profileImageUrl = profileImage; // Assuming profileImage is set elsewhere
 
       if (!profileImageUrl) {
-        // Extract initials from the name
+        // Fetch SVG from DiceBear if profile image not provided
         const initials = name
           .split(" ")
           .map((word) => word[0])
           .join("")
           .toUpperCase();
 
-        // Fetch SVG from DiceBear
-        const response = await axios.get(
-          `https://api.dicebear.com/9.x/initials/svg?seed=${initials}`,
-          {
-            responseType: "text", // Ensure the response is treated as text
-          }
-        );
-
-        // Encode SVG to base64
-        const svgBase64 = Buffer.from(response.data).toString("base64");
-        profileImageUrl = `data:image/svg+xml;base64,${svgBase64}`;
+        profileImageUrl = `https://api.dicebear.com/9.x/initials/svg?seed=${initials}`;
       }
 
       const response = await axios.post("/auth/register", {
         name,
         email,
         user_password,
-        profile_image: profileImageUrl,
+        profile_image: profileImageUrl, // Send URL directly to backend's profile_image field
       });
 
       if (response.status === 200) {
         const token = response.data.token;
         localStorage.setItem("token", token);
+        // Optionally store profileImage URL in local storage
+        localStorage.setItem("profileImage", profileImageUrl);
         window.location.href = `/pages/home/`;
       }
     } catch (error) {
       console.error("Registration failed:", error);
       setRegistrationError("Registration failed. Please try again later.");
-      // Handle error (show error message, etc.)
     }
   };
 

@@ -1,5 +1,6 @@
 const UploadedImage = require("../model/uploadedImage");
 const User = require("../model/user");
+const Notification = require("../model/notification");
 require("dotenv").config();
 
 const createGoogleUser = async (profile) => {
@@ -32,7 +33,7 @@ const deleteUserById = async (userId) => {
       throw new Error("User not found");
     }
 
-    // Delete uploaded images associated with the user
+    await Notification.destroy({ where: { userId } });
     await UploadedImage.destroy({ where: { userId } });
 
     // Delete the user from the database
