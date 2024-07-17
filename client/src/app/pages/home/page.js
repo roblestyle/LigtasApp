@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import CustomWebcam from "@/app/components/home/customwebcam";
 import Homebg from "@/app/components/home/homebg";
 import axios from "../../api/axios";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Import jwtDecode without curly braces for default import
 
 export default function Home() {
   const [userName, setUserName] = useState(null);
@@ -18,15 +18,15 @@ export default function Home() {
   const notificationDropdownRef = useRef(null);
 
   const handleSubmit = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("userToken"); // Update to remove "userToken" instead of "token"
     window.location.href = "/pages/login/";
   };
 
   const handleDeleteAccount = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const userToken = localStorage.getItem("userToken"); // Use "userToken" instead of "token"
       await axios.delete(`/api/${userId}`, {
-        headers: { Authorization: token },
+        headers: { Authorization: userToken }, // Update to use "userToken"
       });
       handleSubmit(); // Logout after account deletion
     } catch (error) {
@@ -66,9 +66,9 @@ export default function Home() {
   // Fetch notifications including createdBy and createdAt
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const userToken = localStorage.getItem("userToken"); // Use "userToken" instead of "token"
       const response = await axios.get(`/api/notifications/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${userToken}` },
       });
 
       // Assuming response.data.notifications is an array of objects with id, message, createdBy, createdAt fields
@@ -86,20 +86,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
+    let userToken = localStorage.getItem("userToken");
 
-    if (!token) {
+    if (!userToken) {
       const urlParams = new URLSearchParams(window.location.search);
-      token = urlParams.get("token");
+      userToken = urlParams.get("userToken");
     }
 
-    if (token) {
+    if (userToken) {
       try {
-        const decodedToken = jwtDecode(token);
+        const decodedToken = jwtDecode(userToken);
         setUserName(decodedToken.name);
         setUserId(decodedToken.id);
         setProfileImage(decodedToken.profile_image);
-        localStorage.setItem("token", token);
+        localStorage.setItem("userToken", userToken); // Update to store "userToken" instead of "token"
 
         // Call fetchNotifications only if userId is valid
         if (userId) {

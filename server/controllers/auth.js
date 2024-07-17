@@ -11,7 +11,7 @@ class AuthController {
     try {
       if (req.user) {
         const payload = { user_id: req.user.id };
-        const token = generateToken(payload, null, "1h");
+        const userToken = generateToken(payload, null, "1h");
 
         return res.status(200).send({
           user: {
@@ -20,7 +20,7 @@ class AuthController {
             email: req.user.email,
             profile_image: req.user.profile_image,
           },
-          token,
+          userToken,
         });
       } else {
         res.status(400).json({ message: "Not Authorized" });

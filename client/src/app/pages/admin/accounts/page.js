@@ -7,10 +7,9 @@ import Table from "@/app/components/admin components/home/table";
 
 export default function page() {
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const adminToken = localStorage.getItem("adminToken");
 
-    if (!token) {
-      // Redirect to login page if no token found
+    if (!adminToken) {
       window.location.href = "/pages/admin/login";
     }
   }, []);

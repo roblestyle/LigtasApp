@@ -6,7 +6,7 @@ import axios from "../../../api/axios";
 import "/src/app/globals.css";
 import AdminCard from "./admincard";
 
-const LeafletMap = ({ token }) => {
+const LeafletMap = ({ adminToken }) => {
   const [locations, setLocations] = useState([]);
   const [notifiedLocations, setNotifiedLocations] = useState(() => {
     const savedNotifiedLocations = localStorage.getItem("notifiedLocations");
@@ -58,7 +58,7 @@ const LeafletMap = ({ token }) => {
     try {
       const response = await axios.get("/api/location-data", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${adminToken}`,
         },
       });
       console.log("Fetched locations:", response.data);
@@ -75,7 +75,7 @@ const LeafletMap = ({ token }) => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${adminToken}`,
           },
         }
       );
@@ -90,7 +90,7 @@ const LeafletMap = ({ token }) => {
     try {
       const response = await axios.delete(`/api/delete-marker/${locationId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${adminToken}`,
         },
       });
       console.log("Marker deleted successfully:", response.data);

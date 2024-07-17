@@ -23,7 +23,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
-    async (token, tokenSecret, profile, done) => {
+    async (userToken, tokenSecret, profile, done) => {
       try {
         const user = await userController.createGoogleUser(profile);
         return done(null, user);

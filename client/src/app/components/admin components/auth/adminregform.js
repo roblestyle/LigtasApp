@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import axios from "../../../api/axios"; // Assuming this axios instance is configured correctly
 
-function UserLogin() {
+function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -19,9 +19,9 @@ function UserLogin() {
 
       console.log(response.data);
 
-      if (response.status === 200 && response.data.token) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
+      if (response.status === 200 && response.data.adminToken) {
+        const adminToken = response.data.adminToken;
+        localStorage.setItem("adminToken", adminToken);
         window.location.href = `/pages/admin/maps`;
       } else {
         setLoginError("Login failed. Please try again later.");
@@ -114,4 +114,4 @@ function UserLogin() {
   );
 }
 
-export default UserLogin;
+export default AdminLogin;

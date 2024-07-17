@@ -35,8 +35,8 @@ function Regform() {
       });
 
       if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
+        const userToken = response.data.userToken;
+        localStorage.setItem("userToken", userToken);
         // Optionally store profileImage URL in local storage
         localStorage.setItem("profileImage", profileImageUrl);
         window.location.href = `/pages/home/`;

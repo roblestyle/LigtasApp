@@ -4,15 +4,15 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
+  const userToken = req.headers.authorization;
 
-  if (!token) {
+  if (!userToken) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
     // Verify JWT token
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(userToken, JWT_SECRET);
     req.user = decoded; // Attach decoded user information to the request object
     next(); // Move to the next middleware or route handler
   } catch (error) {

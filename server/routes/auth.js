@@ -23,26 +23,20 @@ router.post("/register", async (req, res) => {
 
     // Fetch a random profile image from DiceBear if no profile image is provided
     let profileImageUrl = profile_image;
-    if (!profileImageUrl) {
-      // Extract initials from the name
-      const initials = name
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .toUpperCase();
+    // Extract initials from the name
+    const initials = name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase();
 
-      // Fetch SVG from DiceBear
-      const response = await axios.get(
-        `https://api.dicebear.com/9.x/initials/svg?seed=${initials}`,
-        {
-          responseType: "text", // Ensure the response is treated as text
-        }
-      );
-
-      // Encode SVG to base64
-      const svgBase64 = Buffer.from(response.data).toString("base64");
-      profileImageUrl = `data:image/svg+xml;base64,${svgBase64}`;
-    }
+    // Fetch SVG from DiceBear
+    const response = await axios.get(
+      `https://api.dicebear.com/9.x/initials/svg?seed=${initials}`,
+      {
+        responseType: "text", // Ensure the response is treated as text
+      }
+    );
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(user_password, 10);
@@ -56,7 +50,7 @@ router.post("/register", async (req, res) => {
     });
 
     // Generate JWT token for the newly registered user
-    const token = jwt.sign(
+    const userToken = jwt.sign(
       {
         id: newUser.id,
         name: newUser.name,
@@ -69,7 +63,7 @@ router.post("/register", async (req, res) => {
     );
 
     return res.status(200).json({
-      token,
+      userToken,
       message: "User registered successfully",
     });
   } catch (error) {
@@ -97,7 +91,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const token = jwt.sign(
+    const userToken = jwt.sign(
       {
         id: user.id,
         name: user.name,
@@ -109,7 +103,7 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    return res.status(200).json({ token, message: "Login successful" });
+    return res.status(200).json({ userToken, message: "Login successful" });
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ error: "Internal server error" });
@@ -138,14 +132,14 @@ router.get(
     const { id, name, profile_image, email } = req.user;
 
     // Generate JWT token
-    const token = jwt.sign(
+    const userToken = jwt.sign(
       { id, name, profile_image, email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" } // Token expiry time
     );
 
     // Redirect with token in query parameter
-    res.redirect(`http://localhost:3000/pages/home?token=${token}`);
+    res.redirect(`http://localhost:3000/pages/home?userToken=${userToken}`);
   }
 );
 

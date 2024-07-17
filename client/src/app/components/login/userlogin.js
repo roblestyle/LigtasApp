@@ -22,11 +22,11 @@ function UserLogin() {
       // Check the structure of response.data to ensure it contains a valid token
       console.log(response.data);
 
-      if (response.status === 200 && response.data.token) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
+      if (response.status === 200 && response.data.userToken) {
+        const userToken = response.data.userToken;
+        localStorage.setItem("userToken", userToken);
 
-        const decodedToken = jwtDecode(token);
+        const decodedToken = jwtDecode(userToken);
         localStorage.setItem("profileImage", decodedToken.profile_image);
         window.location.href = `/pages/home/`;
       } else {

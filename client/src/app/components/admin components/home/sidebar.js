@@ -4,7 +4,7 @@ import React from "react";
 
 const Sidebar = () => {
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("adminToken");
     // Redirect or perform any other action after logout
     window.location.href = "/pages/admin/login"; // Redirect to login page
   };

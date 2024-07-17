@@ -13,13 +13,12 @@ const LeafletMap = dynamic(
 );
 
 function MapsPage() {
-  const [token, setToken] = useState(null);
+  const [adminToken, setToken] = useState(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("adminToken");
 
     if (!storedToken) {
-      // Redirect to login if no token found
       window.location.href = "/pages/admin/login";
     } else {
       setToken(storedToken);
@@ -45,7 +44,7 @@ function MapsPage() {
             <h1 className="font-semibold text-white text-md">Map Dashboard</h1>
           </div>
           <div className="w-full h-64 my-7">
-            {token && <LeafletMap token={token} />}
+            {adminToken && <LeafletMap adminToken={adminToken} />}
           </div>
         </div>
       </div>
