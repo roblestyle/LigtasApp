@@ -14,23 +14,40 @@ export default function Home() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] =
     useState(false);
+  const [markedNotifications, setMarkedNotifications] = useState([]);
   const profileDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
 
   const handleSubmit = () => {
-    localStorage.removeItem("userToken"); // Update to remove "userToken" instead of "token"
+    localStorage.removeItem("userToken");
     window.location.href = "/pages/login/";
   };
 
   const handleDeleteAccount = async () => {
     try {
-      const userToken = localStorage.getItem("userToken"); // Use "userToken" instead of "token"
+      const userToken = localStorage.getItem("userToken");
       await axios.delete(`/api/${userId}`, {
-        headers: { Authorization: userToken }, // Update to use "userToken"
+        headers: { Authorization: userToken },
       });
       handleSubmit(); // Logout after account deletion
     } catch (error) {
       console.error("Error deleting account:", error);
+    }
+  };
+
+  const handleDeleteNotification = async (notificationId) => {
+    try {
+      const userToken = localStorage.getItem("userToken");
+      await axios.delete(`/api/notifications/${notificationId}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter(
+          (notification) => notification.id !== notificationId
+        )
+      );
+    } catch (error) {
+      console.error("Error deleting notification:", error);
     }
   };
 
@@ -63,15 +80,44 @@ export default function Home() {
     }
   };
 
-  // Fetch notifications including createdBy and createdAt
+  const handleMarkNotification = (notificationId) => {
+    if (markedNotifications.includes(notificationId)) {
+      setMarkedNotifications((prevMarks) =>
+        prevMarks.filter((mark) => mark !== notificationId)
+      );
+    } else {
+      setMarkedNotifications((prevMarks) => [...prevMarks, notificationId]);
+    }
+  };
+
+  const handleDeleteMarkedNotifications = async () => {
+    try {
+      const userToken = localStorage.getItem("userToken");
+      await Promise.all(
+        markedNotifications.map(async (notificationId) => {
+          await axios.delete(`/api/notifications/${notificationId}`, {
+            headers: { Authorization: `Bearer ${userToken}` },
+          });
+        })
+      );
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter(
+          (notification) => !markedNotifications.includes(notification.id)
+        )
+      );
+      setMarkedNotifications([]);
+    } catch (error) {
+      console.error("Error deleting marked notifications:", error);
+    }
+  };
+
   const fetchNotifications = async () => {
     try {
-      const userToken = localStorage.getItem("userToken"); // Use "userToken" instead of "token"
+      const userToken = localStorage.getItem("userToken");
       const response = await axios.get(`/api/notifications/${userId}`, {
         headers: { Authorization: `Bearer ${userToken}` },
       });
 
-      // Assuming response.data.notifications is an array of objects with id, message, createdBy, createdAt fields
       setNotifications(response.data.notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -99,9 +145,8 @@ export default function Home() {
         setUserName(decodedToken.name);
         setUserId(decodedToken.id);
         setProfileImage(decodedToken.profile_image);
-        localStorage.setItem("userToken", userToken); // Update to store "userToken" instead of "token"
+        localStorage.setItem("userToken", userToken);
 
-        // Call fetchNotifications only if userId is valid
         if (userId) {
           fetchNotifications();
         }
@@ -113,10 +158,15 @@ export default function Home() {
       console.error("Token is missing");
       redirectToLogin();
     }
-  }, [userId]); // Trigger fetchNotifications when userId changes
+  }, [userId]);
 
   const redirectToLogin = () => {
     window.location.href = "/pages/login/";
+  };
+
+  const toggleMarkMode = () => {
+    setMarkedNotifications([]);
+    setNotificationDropdownOpen(!notificationDropdownOpen);
   };
 
   return (
@@ -131,14 +181,13 @@ export default function Home() {
           </h1>
 
           <div className="relative flex items-center">
-            {/* Notification Bell */}
             <div className="relative mx-4" ref={notificationDropdownRef}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 className="w-7 h-7 text-white cursor-pointer"
-                onClick={toggleNotificationDropdown}
+                onClick={toggleMarkMode}
               >
                 <path
                   fillRule="evenodd"
@@ -147,21 +196,35 @@ export default function Home() {
                 />
               </svg>
 
-              {/* Red Dot for Notifications */}
-              {notifications.length > 0 && (
-                <div className="absolute -top-1 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
-              )}
-
-              {/* Notification Dropdown */}
               {notificationDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1">
                   {notifications.length > 0 ? (
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className="px-4 py-2 hover:bg-gray-100 flex justify-between items-center"
+                        className="px-4 py-2 flex justify-between items-center"
                       >
-                        <p className="text-sm mr-2">{notification.message}</p>
+                        <div className="flex items-center">
+                          {markedNotifications.includes(notification.id) ? (
+                            <input
+                              type="checkbox"
+                              className="form-checkbox h-4 w-4 text-red-600 cursor-pointer"
+                              checked
+                              onChange={() =>
+                                handleMarkNotification(notification.id)
+                              }
+                            />
+                          ) : (
+                            <input
+                              type="checkbox"
+                              className="form-checkbox h-4 w-4 text-red-600 cursor-pointer"
+                              onChange={() =>
+                                handleMarkNotification(notification.id)
+                              }
+                            />
+                          )}
+                          <p className="text-sm ml-2">{notification.message}</p>
+                        </div>
                         <p className="text-xs text-gray-500">
                           {formatNotificationTime(notification.createdAt)}
                         </p>
@@ -174,11 +237,21 @@ export default function Home() {
                       </p>
                     </div>
                   )}
+
+                  {markedNotifications.length > 0 && (
+                    <div className="px-4 py-2 flex justify-end">
+                      <button
+                        onClick={handleDeleteMarkedNotifications}
+                        className="text-xs text-red-600 hover:text-red-800"
+                      >
+                        Delete Selected
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Profile Image */}
             <div className="relative" ref={profileDropdownRef}>
               <img
                 src={profileImage}
@@ -231,8 +304,6 @@ export default function Home() {
   );
 }
 
-// Helper function to format notification time
 const formatNotificationTime = (time) => {
-  // Implement your formatting logic here, e.g., using Moment.js
-  return `[${time}]`;
+  return `[${time}]`; // Implement your formatting logic here, e.g., using Moment.js
 };

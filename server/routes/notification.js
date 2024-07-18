@@ -39,4 +39,27 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the notification by ID
+    const notification = await Notification.findByPk(id);
+
+    // If notification not found, return 404
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    // Delete the notification
+    await notification.destroy();
+
+    // Respond with success message
+    return res.status(204).end();
+  } catch (error) {
+    console.error("Error deleting notification:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router;
