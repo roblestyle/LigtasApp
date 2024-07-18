@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -10,9 +10,9 @@ const LeafletMap = ({ adminToken }) => {
   const [locations, setLocations] = useState([]);
   const [notifiedLocations, setNotifiedLocations] = useState(() => {
     const savedNotifiedLocations = localStorage.getItem("notifiedLocations");
-    return savedNotifiedLocations
-      ? new Set(JSON.parse(savedNotifiedLocations))
-      : new Set();
+    return new Set(
+      savedNotifiedLocations ? JSON.parse(savedNotifiedLocations) : []
+    );
   });
   const mapRef = useRef(null);
 
@@ -36,7 +36,7 @@ const LeafletMap = ({ adminToken }) => {
     // Save notifiedLocations to local storage whenever it changes
     localStorage.setItem(
       "notifiedLocations",
-      JSON.stringify(Array.from(notifiedLocations))
+      JSON.stringify([...notifiedLocations])
     );
 
     // Ensure map updates size after initial render
@@ -54,54 +54,53 @@ const LeafletMap = ({ adminToken }) => {
     }
   }, [locations, notifiedLocations]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await axios.get("/api/location-data", {
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        },
+        headers: { Authorization: `Bearer ${adminToken}` },
       });
-      console.log("Fetched locations:", response.data);
       setLocations(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }, [adminToken]);
 
-  const handleSendHelp = async (locationId) => {
-    try {
-      const response = await axios.post(
-        `/api/send-help/${locationId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        }
-      );
-      console.log("Notification sent successfully:", response.data);
-      setNotifiedLocations((prev) => new Set(prev).add(locationId));
-    } catch (error) {
-      console.error("Error sending help:", error);
-    }
-  };
+  const handleSendHelp = useCallback(
+    async (locationId) => {
+      try {
+        const response = await axios.post(
+          `/api/send-help/${locationId}`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }
+        );
+        setNotifiedLocations((prev) => new Set(prev).add(locationId));
+      } catch (error) {
+        console.error("Error sending help:", error);
+      }
+    },
+    [adminToken]
+  );
 
-  const handleDeleteMarker = async (locationId) => {
-    try {
-      const response = await axios.delete(`/api/delete-marker/${locationId}`, {
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        },
-      });
-      console.log("Marker deleted successfully:", response.data);
-      // Remove the deleted marker from locations state
-      setLocations((prevLocations) =>
-        prevLocations.filter((location) => location.id !== locationId)
-      );
-    } catch (error) {
-      console.error("Error deleting marker:", error);
-    }
-  };
+  const handleDeleteMarker = useCallback(
+    async (locationId) => {
+      try {
+        const response = await axios.delete(
+          `/api/delete-marker/${locationId}`,
+          {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          }
+        );
+        setLocations((prevLocations) =>
+          prevLocations.filter((location) => location.id !== locationId)
+        );
+      } catch (error) {
+        console.error("Error deleting marker:", error);
+      }
+    },
+    [adminToken]
+  );
 
   return (
     <>

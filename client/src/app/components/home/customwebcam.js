@@ -1,83 +1,57 @@
 import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import axios from "../../api/axios";
-import jwtDecode from "jwt-decode";
 import Popup from "./popup"; // Adjust the path based on your file structure
 
 const WebcamComponent = ({ user }) => {
   const webcamRef = useRef(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const capture = async () => {
+    try {
+      if (!webcamRef.current) {
+        setError("Webcam not available.");
+        return;
+      }
+
+      const imageSrc = webcamRef.current.getScreenshot();
+      const blob = await fetch(imageSrc).then((res) => res.blob());
+
+      const formData = new FormData();
+      formData.append("image", blob, "webcam-image.jpg");
+      formData.append("userId", user);
+
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      formData.append("latitude", position.coords.latitude.toString());
+      formData.append("longitude", position.coords.longitude.toString());
+
+      const response = await axios.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user}`,
+        },
+      });
+
+      console.log("Image and location uploaded successfully:", response.data);
+      setIsPopupOpen(true);
+    } catch (error) {
+      console.error("Error capturing image or uploading location:", error);
+      setError("Error capturing image or uploading location.");
+    }
+  };
 
   const handleUserMediaError = (error) => {
     console.error("Error accessing webcam:", error);
     setError("Error accessing webcam. Please check permissions or try again.");
   };
 
-  const capture = () => {
-    if (!webcamRef.current) {
-      setError("Webcam not available.");
-      return;
-    }
-
-    const imageSrc = webcamRef.current.getScreenshot();
-
-    fetch(imageSrc)
-      .then((res) => res.blob())
-      .then((blob) => {
-        const formData = new FormData();
-        formData.append("image", blob, "webcam-image.jpg");
-        formData.append("userId", user);
-
-        if ("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              formData.append("latitude", position.coords.latitude.toString());
-              formData.append(
-                "longitude",
-                position.coords.longitude.toString()
-              );
-
-              axios
-                .post("/api/upload", formData, {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${user}`, // Use userId directly as token
-                  },
-                })
-                .then((response) => {
-                  console.log(
-                    "Image and location uploaded successfully:",
-                    response.data
-                  );
-                  setIsPopupOpen(true); // Show popup on success
-                })
-                .catch((error) => {
-                  console.error("Error uploading image and location:", error);
-                  setError("Error uploading image and location.");
-                });
-            },
-            (error) => {
-              console.error("Error getting location:", error);
-              setError("Error getting location.");
-            }
-          );
-        } else {
-          console.log("Geolocation is not supported by this browser.");
-          setError("Geolocation is not supported.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error capturing image:", error);
-        setError("Error capturing image.");
-      });
-  };
-
   return (
     <div className="flex flex-col justify-center p-4">
-      <div className="flex justify-center">
-        {error && <p className="p-4 text-red-500">{error}</p>}
-      </div>
+      {error && <p className="p-4 text-red-500">{error}</p>}
       <div className="flex items-center justify-center">
         <div className="rounded-lg h-auto w-auto flex items-center justify-center">
           <Webcam
@@ -129,4 +103,4 @@ const WebcamComponent = ({ user }) => {
   );
 };
 
-export default WebcamComponent;
+export default React.memo(WebcamComponent);

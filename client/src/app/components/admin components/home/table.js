@@ -1,16 +1,43 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import api from "../../../api/axios";
+
+const Pagination = ({ totalPages, currentPage, handlePageChange }) => {
+  return (
+    <div className="flex justify-center mt-4">
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+        (pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            className={`px-3 py-1 mx-1 border rounded-md ${
+              pageNumber === currentPage
+                ? "bg-red-950 text-white"
+                : "bg-white text-red-950"
+            }`}
+          >
+            {pageNumber}
+          </button>
+        )
+      )}
+    </div>
+  );
+};
 
 export default function Table() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await api.get("/api/users"); // Relative URL
-        setUsers(response.data);
+        const response = await api.get("/api/users");
+        const sortedUsers = response.data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setUsers(sortedUsers);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
@@ -21,11 +48,28 @@ export default function Table() {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+    setCurrentPage(1); // Reset to first page when search term changes
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = useMemo(
+    () =>
+      users.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [users, searchTerm]
   );
+
+  const currentUsers = useMemo(() => {
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    return filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  }, [filteredUsers, currentPage, usersPerPage]);
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -82,7 +126,7 @@ export default function Table() {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user, index) => (
+            {currentUsers.map((user, index) => (
               <tr key={index} className="bg-white border-b text-gray-600">
                 <td className="px-6 py-4 text-center">
                   {user.profile_image && (
@@ -103,6 +147,11 @@ export default function Table() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 }
