@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import Sidebar from "@/app/components/admin components/home/sidebar";
 import Dashboardbg from "@/app/components/admin components/home/dashboardbg";
 
@@ -21,7 +22,22 @@ function MapsPage() {
     if (!storedToken) {
       window.location.href = "/pages/admin/login";
     } else {
-      setToken(storedToken);
+      try {
+        const decodedToken = jwtDecode(storedToken);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          // Token has expired
+          localStorage.removeItem("adminToken");
+          window.location.href = "/pages/admin/login";
+        } else {
+          setToken(storedToken);
+        }
+      } catch (error) {
+        // If there's an error decoding the token, remove it and redirect to login
+        localStorage.removeItem("adminToken");
+        window.location.href = "/pages/admin/login";
+      }
     }
   }, []);
 
