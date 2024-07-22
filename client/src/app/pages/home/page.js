@@ -6,6 +6,7 @@ import Homebg from "@/app/components/home/homebg";
 import ProfileDropdown from "../../components/home/dropdown/profileDroppdown";
 import NotificationDropdown from "../../components/home/dropdown/notificationDropdown";
 import { jwtDecode } from "jwt-decode";
+import axios from "../../api/axios";
 
 export default function Home() {
   const [userName, setUserName] = useState(null);
