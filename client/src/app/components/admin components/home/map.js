@@ -104,13 +104,14 @@ const LeafletMap = ({ adminToken }) => {
 
   return (
     <>
-      <div className="my-4">
+      <div className="my-4 hidden md:block">
         <AdminCard totalMarkers={locations.length} />
       </div>
       <MapContainer
         center={[13.75, 121.05]}
         zoom={13}
         style={{ height: "480px", width: "100%" }}
+        className="map-container"
         whenCreated={(mapInstance) => {
           mapRef.current = mapInstance;
         }}
@@ -132,9 +133,9 @@ const LeafletMap = ({ adminToken }) => {
                 <img
                   src={`http://localhost:5000${location.image}`}
                   alt="Popup Image"
-                  className="w-full text-white mb-5 rounded-lg"
+                  className="w-full text-white mb-2 rounded-lg place-self-center"
                 />
-                <p className="text-white">
+                <p className="text-white text-xs">
                   Location uploaded by {location.userName}
                 </p>
                 <button
@@ -143,7 +144,7 @@ const LeafletMap = ({ adminToken }) => {
                     notifiedLocations.has(location.id)
                       ? "bg-gray-500 cursor-not-allowed"
                       : "bg-red-700 hover:bg-red-800"
-                  } text-white font-bold py-2 px-4 rounded mt-3`}
+                  } text-white font-bold py-2 px-3 rounded`}
                   disabled={notifiedLocations.has(location.id)}
                 >
                   {notifiedLocations.has(location.id)
@@ -153,7 +154,7 @@ const LeafletMap = ({ adminToken }) => {
                 {notifiedLocations.has(location.id) && (
                   <button
                     onClick={() => handleDeleteMarker(location.id)}
-                    className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded mt-3 ml-3"
+                    className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded ml-3"
                   >
                     Delete Marker
                   </button>

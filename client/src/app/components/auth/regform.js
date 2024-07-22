@@ -171,12 +171,6 @@ const Regform = () => {
             Sign in
           </a>
         </p>
-        <p className="text-white text-center text-xs sm:text-lg sm:text-left">
-          By registering, you agree with
-          <span className="text-[#FFD910]"> terms and conditions </span>
-          and
-          <span className="text-[#FFD910]"> privacy policy</span>.
-        </p>
       </div>
     </div>
   );

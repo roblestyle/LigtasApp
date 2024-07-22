@@ -47,13 +47,13 @@ function MapsPage() {
       <div className="absolute inset-0 z-0">
         <Dashboardbg />
       </div>
-      <div className="flex flex-rows">
-        <div className="relative flex justify-start p-4 items-center h-screen z-10">
+      <div className="flex flex-col md:flex-row h-full">
+        <div className="relative z-20 md:p-4">
           <Sidebar />
         </div>
 
-        <div className="relative p-4 w-full">
-          <div className="mt-3">
+        <div className="relative p-4 w-full flex-1">
+          <div className="mt-12 md:mt-3">
             <p className="font-medium text-white text-sm mb-5">
               Pages/ Map Dashboard
             </p>
