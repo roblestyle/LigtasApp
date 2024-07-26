@@ -7,3 +7,4 @@ uploads
 /client/.next
 
 /server/.env
+server/env
