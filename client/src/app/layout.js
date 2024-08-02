@@ -4,7 +4,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Command Center - Batangas State University",
+  title: "LIGTAS - Batangas State University",
 };
 
 export default function RootLayout({ children }) {

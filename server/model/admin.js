@@ -22,7 +22,7 @@ Admin.init(
   },
   {
     sequelize,
-    modelName: "Admin",
+    modelName: "admin",
   }
 );
 

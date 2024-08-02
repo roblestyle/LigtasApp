@@ -139,7 +139,7 @@ router.get(
     );
 
     // Redirect with token in query parameter
-    res.redirect(`http://localhost:3000/pages/home?userToken=${userToken}`);
+    res.redirect(`http://atlas.batstate-u.edu.ph/commandcenter/ligtas/app/pages/home?userToken=${userToken}`);
   }
 );
 

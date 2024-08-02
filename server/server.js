@@ -43,8 +43,8 @@ const startServer = async () => {
     await sequelize.sync({ force: false });
     console.log("Database synchronized.");
 
-    app.listen(5000, () => {
-      console.log(`Server is running on port 5000.`);
+    app.listen(5123, () => {
+      console.log(`Server is running on port 5123.`);
     });
   } catch (error) {
     console.error("Unable to connect to the database:", error);

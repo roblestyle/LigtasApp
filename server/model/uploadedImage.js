@@ -39,7 +39,7 @@ UploadedImage.init(
   },
   {
     sequelize, // Pass the Sequelize instance
-    modelName: "UploadedImage",
+    modelName: "uploadedImage",
   }
 );
 

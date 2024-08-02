@@ -39,7 +39,7 @@ Notification.init(
   },
   {
     sequelize,
-    modelName: "Notification",
+    modelName: "notification",
   }
 );
 

@@ -37,7 +37,7 @@ User.init(
   },
   {
     sequelize, // Pass the Sequelize instance
-    modelName: "User",
+    modelName: "user",
   }
 );
 

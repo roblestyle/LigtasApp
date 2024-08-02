@@ -53,7 +53,7 @@ function UserLogin() {
           Batangas State University
         </h1>
         <p className="text-lg sm:text-xl font-semibold text-white text-center sm:text-left">
-          Command Center
+          LIGTAS
         </p>
       </div>
       <div className="h-full flex flex-col justify-start p-4">
@@ -121,7 +121,7 @@ function UserLogin() {
             type="button"
             className="text-black bg-white text-md sm:text-lg focus:ring-1 focus:outline-none focus:ring-[#FFD910]/50 font-medium rounded-md text-sm px-4 py-2 text-center sm:w-64 inline-flex justify-center items-center mb-2 transition duration-300 ease-in-out hover:bg-red-800 hover:text-white"
             onClick={() =>
-              (window.location.href = "http://localhost:5000/auth/google")
+              (window.location.href = "http://atlas.batstate-u.edu.ph:5123/auth/google")
             }
           >
             <img
