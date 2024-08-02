@@ -16,6 +16,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+
 passport.use(
   new GoogleStrategy(
     {
@@ -33,5 +34,8 @@ passport.use(
     }
   )
 );
+
+
+
 
 module.exports = passport;
