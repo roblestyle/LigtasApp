@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import axios from "../../../api/axios"; // Assuming this axios instance is configured correctly
 
 const AdminLogin = () => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -34,7 +35,7 @@ const AdminLogin = () => {
     <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
       <div className="h-full flex flex-col items-center justify-center p-4">
         <img
-          src="/logon1.png"
+          src={`${basePath}/logon1.png`}
           className="w-16 h-15 sm:w-64 sm:h-63 mt-4 sm:my-4"
           alt="Logo"
         />

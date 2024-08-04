@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const Sidebar = () => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
 
@@ -120,7 +121,7 @@ const Sidebar = () => {
           <div className="flex flex-col flex-1">
             <div className="flex flex-row items-center justify-center">
               <img
-                src="/logon1.png"
+                src={`${basePath}/logon1.png`}
                 className="w-11 h-10 md:w-13 md:h-12"
                 alt="Logo"
               />

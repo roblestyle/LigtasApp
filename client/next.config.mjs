@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/commandcenter/ligtas/app',
-  assetPrefix: '/commandcenter/ligtas/app/', 
+  // basePath: '/commandcenter/ligtas/app',
+  // assetPrefix: '/commandcenter/ligtas/app/', 
 };
 
 export default nextConfig;

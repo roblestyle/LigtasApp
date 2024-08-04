@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import axios from "../../api/axios";
 
 const Regform = () => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,7 +53,7 @@ const Regform = () => {
     <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
       <div className="h-full flex flex-col items-center justify-center p-4">
         <img
-          src="/logon1.png"
+          src={`${basePath}/logon1.png`}
           className="w-16 h-15 sm:w-64 sm:h-63 mt-4 sm:my-4"
           alt="Logo"
         />
@@ -151,11 +152,11 @@ const Regform = () => {
             type="button"
             className="text-black bg-white text-md sm:text-lg focus:ring-1 focus:outline-none focus:ring-[#FFD910]/50 font-medium rounded-md text-sm px-4 py-2 text-center w-44 sm:w-64 inline-flex justify-center items-center mb-2 transition duration-300 ease-in-out hover:bg-red-800 hover:text-white"
             onClick={() =>
-              (window.location.href = "http://atlas.batstate-u.edu.ph:5123/auth/google")
+              (window.location.href = "https://api-ligtas.parallaxed.ph/auth/google")
             }
           >
             <img
-              src="/googleicon.png"
+              src={`${basePath}/googleicon.png`}
               className="w-3 h-3 sm:w-4 sm:h-4 mr-2"
               alt="Google icon"
             />

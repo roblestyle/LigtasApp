@@ -1,11 +1,16 @@
-import React from "react";
+"use client";
 
-function regcard() {
+import React from "react";
+// import { useRouter } from 'next/router';
+// import Image from 'next/image';
+
+function Regcard() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   return (
     <div className="h-screen w-screen overflow-hidden">
-      <img src="/admin_login.png" className="object-cover w-full h-full" />
+      <img src={`${basePath}/admin_login.png`} className="object-cover w-full h-full" alt="regcover" as="image"/>
     </div>
   );
 }
 
-export default regcard;
+export default Regcard;

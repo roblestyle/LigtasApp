@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("ligtas", "ligtas", "zxcasdqwe", {
+const sequelize = new Sequelize("parapoia_ligtas", "parapoia_ligtas", "Ligtas1123!!", {
   dialect: "mysql",
   host: "localhost", // Update with your database host
   timezone: "+08:00", // Adjust this based on your database server's timezone

@@ -115,7 +115,7 @@ router.get("/logout", (req, res) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    res.redirect("https://ligtas.parallaxed.ph");
   });
 });
 
@@ -139,7 +139,7 @@ router.get(
     );
 
     // Redirect with token in query parameter
-    res.redirect(`http://atlas.batstate-u.edu.ph/commandcenter/ligtas/app/pages/home?userToken=${userToken}`);
+    res.redirect(`https://ligtas.parallaxed.ph/pages/home?userToken=${userToken}`);
   }
 );
 
