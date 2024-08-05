@@ -115,7 +115,7 @@ router.get("/logout", (req, res) => {
     if (err) {
       return next(err);
     }
-    res.redirect("https://ligtas.parallaxed.ph");
+    res.redirect("/");
   });
 });
 
@@ -139,7 +139,7 @@ router.get(
     );
 
     // Redirect with token in query parameter
-    res.redirect(`https://ligtas.parallaxed.ph/pages/home?userToken=${userToken}`);
+    res.redirect(`http://localhost:3000/pages/home?userToken=${userToken}`);
   }
 );
 

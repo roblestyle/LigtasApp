@@ -131,7 +131,7 @@ const LeafletMap = ({ adminToken }) => {
             <Popup>
               <div className="text-center">
                 <img
-                  src={`https://api-ligtas.parallaxed.ph${location.image}`}
+                  src={`http://localhost:5000${location.image}`}
                   alt="Popup Image"
                   className="w-full text-white mb-2 rounded-lg place-self-center"
                 />
