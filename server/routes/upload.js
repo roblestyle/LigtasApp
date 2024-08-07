@@ -78,7 +78,7 @@ router.get("/location-data", async (req, res) => {
       image: location.image,
       latitude: location.latitude,
       longitude: location.longitude,
-      userName: location.User.name, // Access the User's name
+      userName: location.user.name, // Access the User's name
     }));
 
     res.json(formattedLocations);

@@ -9,20 +9,22 @@ export default function NotificationDropdown({ userId }) {
     useState(false);
   const [markedNotifications, setMarkedNotifications] = useState([]);
   const notificationDropdownRef = useRef(null);
+  const deleteButtonRef = useRef(null);
 
   const formatNotificationTime = (time) => {
     return `[${time}]`;
   };
 
-  const toggleNotificationDropdown = () => {
+  const toggleNotificationDropdown = (e) => {
+    e.stopPropagation(); // Stop event propagation
     setNotificationDropdownOpen(!notificationDropdownOpen);
   };
 
   const handleClickOutside = (event) => {
     if (
       notificationDropdownRef.current &&
-      !notificationDropdownRef.current.contains(event.target)
-    ) {
+      !notificationDropdownRef.current.contains(event.target) &&
+      (!deleteButtonRef.current || !deleteButtonRef.current.contains(event.target))) {
       setNotificationDropdownOpen(false);
     }
   };
@@ -100,6 +102,17 @@ export default function NotificationDropdown({ userId }) {
     }
   }, [userId]);
 
+    // Set up polling to fetch notifications every 30 seconds
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (userId) {
+          fetchNotifications();
+        }
+      }, 3000); // 30 seconds
+  
+      return () => clearInterval(interval); // Clean up interval on component unmount
+    }, [userId]);
+
   return (
     <div className="relative mx-4" ref={notificationDropdownRef}>
       <svg
@@ -117,7 +130,7 @@ export default function NotificationDropdown({ userId }) {
       </svg>
 
       {notificationDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1">
+        <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div
@@ -157,7 +170,12 @@ export default function NotificationDropdown({ userId }) {
           {markedNotifications.length > 0 && (
             <div className="px-4 py-2 flex justify-end">
               <button
-                onClick={handleDeleteMarkedNotifications}
+                ref={deleteButtonRef}
+                // onClick={handleDeleteMarkedNotifications}
+                onClick={(e) => {
+                  e.stopPropagation(); // Stop event propagation
+                  handleDeleteMarkedNotifications();
+                }}
                 className="text-xs text-red-600 hover:text-red-800"
               >
                 Delete Selected

@@ -117,8 +117,8 @@ const LeafletMap = ({ adminToken }) => {
         }}
       >
         <TileLayer
-          url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {locations.map((location) => (
           <Marker
@@ -131,7 +131,7 @@ const LeafletMap = ({ adminToken }) => {
             <Popup>
               <div className="text-center">
                 <img
-                  src={`http://localhost:5000${location.image}`}
+                  src={`https://api-ligtas.parallaxed.ph${location.image}`}
                   alt="Popup Image"
                   className="w-full text-white mb-2 rounded-lg place-self-center"
                 />

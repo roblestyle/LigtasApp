@@ -139,7 +139,7 @@ router.get(
     );
 
     // Redirect with token in query parameter
-    res.redirect(`http://localhost:3000/pages/home?userToken=${userToken}`);
+    res.redirect(`https://api-ligtas.parallaxed.ph/pages/home?userToken=${userToken}`);
   }
 );
 

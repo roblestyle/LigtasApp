@@ -6,6 +6,11 @@ export default function ProfileDropdown({ profileImage, handleDeleteAccount }) {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef(null);
 
+  const handleSubmit = () => {
+    localStorage.removeItem("userToken");
+    window.location.href = "/pages/login/";
+  };
+
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!profileDropdownOpen);
   };
@@ -27,6 +32,7 @@ export default function ProfileDropdown({ profileImage, handleDeleteAccount }) {
   }, []);
 
   return (
+
     <div className="relative" ref={profileDropdownRef}>
       <img
         src={profileImage}
@@ -35,15 +41,27 @@ export default function ProfileDropdown({ profileImage, handleDeleteAccount }) {
         onClick={toggleProfileDropdown}
       />
       {profileDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
           <button
             onClick={handleDeleteAccount}
             className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"
           >
             Delete Account
           </button>
+          <button
+            onClick={handleSubmit}
+            className="block px-4 py-2 text-sm text-blue-700 hover:bg-gray-100 w-full text-left"
+          >
+            Logout
+          </button>
         </div>
+
+
+
+        
       )}
     </div>
+
+    
   );
 }
