@@ -44,7 +44,7 @@ const Popup = ({ isOpen, setIsOpen }) => {
               />
             </svg>
             <h3 className="text-xl md:text-2xl font-semibold text-gray-600 mt-4 md:mt-6">
-              Image and location uploaded successfully
+              Successful
             </h3>
           </motion.div>
         </motion.div>

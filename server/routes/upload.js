@@ -23,19 +23,22 @@ const upload = multer({ storage: storage });
 
 // API endpoint to handle image upload and location data
 router.post("/upload", upload.single("image"), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
+  // if (!req.file) {
+  //   return res.status(400).send("No file uploaded.");
+  // }
 
   // Extracting location data from the request body
-  const { latitude, longitude, userId } = req.body;
-  if (!latitude || !longitude || !userId) {
-    return res.status(400).send("Location data or userId is missing.");
+  const { latitude, longitude, userId, condition, message } = req.body;
+  if (!latitude || !longitude || !userId || !condition) {
+    return res.status(400).send("Location data or userId or condition is missing.");
   }
 
   try {
-    // Generate the local file URL
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // Generate the local file URL only if an image was uploaded
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = `/uploads/${req.file.filename}`; // Only set imageUrl if a file exists
+    }
 
     // Create a new record in the database
     await UploadedImage.create({
@@ -43,23 +46,69 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       latitude: latitude,
       longitude: longitude,
       userId: userId,
+      condition: condition, // Store the condition (1 or 0)
+      message: message,
     });
 
-    console.log("File has been received:", req.file.originalname);
+ console.log("File has been received:", req.file ? req.file.originalname : "No image uploaded");
     console.log(`Location: Latitude ${latitude}, Longitude ${longitude}`);
 
     // Respond with success message including location data
     res.send({
       message: "Image and location uploaded successfully",
-      fileName: req.file.originalname,
+      fileName: req.file ? req.file.originalname : "No image",
       location: {
         latitude,
         longitude,
       },
+      condition: condition === "1" ? "is Safe" : "Needs Help", // Return the condition in human-readable form
+      message: message,
     });
   } catch (error) {
     console.error("Error saving to database:", error);
     res.status(500).send("Error saving the image and location data.");
+  }
+});
+
+// Route to update the condition to 'rescued' (2)
+router.put("/send-help/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const marker = await UploadedImage.findByPk(id);
+    if (!marker) {
+      return res.status(404).json({ error: "Marker not found" });
+    }
+
+    // Update the condition to 2 (rescued)
+    marker.condition = 2;
+    await marker.save();
+
+    res.json({ message: "Help sent successfully, marker updated to rescued" });
+  } catch (error) {
+    console.error("Error updating marker condition:", error);
+    res.status(500).json({ error: "Error updating marker condition" });
+  }
+});
+
+// Route to retract help (update the condition back to 'Needs Help' (1))
+router.put("/retract-help/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const marker = await UploadedImage.findByPk(id);
+    if (!marker) {
+      return res.status(404).json({ error: "Marker not found" });
+    }
+
+    // Update the condition back to 1 (Needs Help)
+    marker.condition = 0;
+    await marker.save();
+
+    res.json({ message: "Help retracted successfully, marker updated to Needs Help" });
+  } catch (error) {
+    console.error("Error updating marker condition:", error);
+    res.status(500).json({ error: "Error updating marker condition" });
   }
 });
 
@@ -68,7 +117,7 @@ router.get("/location-data", async (req, res) => {
     const locations = await UploadedImage.findAll({
       include: {
         model: User, // Include the User model
-        attributes: ["name"], // Select the 'name' attribute from User
+        attributes: ["name", "email"], // Select the 'name' attribute from User
       },
     });
 
@@ -79,6 +128,11 @@ router.get("/location-data", async (req, res) => {
       latitude: location.latitude,
       longitude: location.longitude,
       userName: location.user.name, // Access the User's name
+      // userName: location.User.name, // Access the User's name
+      userEmail: location.user.email, // Access the User's email
+      condition: location.condition === "1" ? "OK" : "Not OK", // Return the condition in human-readable form
+      message: location.message,
+      createdAt: location.createdAt,
     }));
 
     res.json(formattedLocations);

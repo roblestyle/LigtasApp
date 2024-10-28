@@ -1,6 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+
+.red-spartan-heading {
+  font-family: 'Play', sans-serif; /* Use a different font if needed */
+  font-size: 25px; /* Set the font size */
+  color: black; /* Set the text color */
+}
+
 
 .leaflet-popup-content-wrapper {
   background-color: #5a0c0c; /* Light khaki background */
@@ -31,4 +39,19 @@
 .map-container {
   z-index: 10;
   position: relative; /* Ensure the map respects the z-index */
+}
+
+/* Add this to your CSS */
+.popup-content {
+  max-height: 300px; /* Adjust as needed */
+  overflow: auto; /* Add scroll if content overflows */
+}
+.popup-content::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+.popup-content img {
+  /* max-height: 200px;  */
+  width: auto; /* Keep the aspect ratio */
+  height: auto; /* Keep the aspect ratio */
 }

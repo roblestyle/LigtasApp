@@ -54,12 +54,12 @@ function UserLogin() {
           Batangas State University
         </h1>
         <p className="text-lg sm:text-xl font-semibold text-white text-center sm:text-left">
-          LIGTAS
+          SafeSpartan
         </p>
       </div>
       <div className="h-full flex flex-col justify-start p-4">
         <h1 className="text-md sm:text-2xl font-semibold text-white mb-3 sm:mb-5 text-center sm:text-left">
-          Login Account
+          Login Using Your Gsuite Account
         </h1>
         <form onSubmit={handleSubmit} className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
@@ -122,8 +122,11 @@ function UserLogin() {
             type="button"
             className="text-black bg-white text-md sm:text-lg focus:ring-1 focus:outline-none focus:ring-[#FFD910]/50 font-medium rounded-md text-sm px-4 py-2 text-center sm:w-64 inline-flex justify-center items-center mb-2 transition duration-300 ease-in-out hover:bg-red-800 hover:text-white"
             onClick={() =>
-              (window.location.href = "https://api-ligtas.parallaxed.ph/auth/google")
+              (window.location.href = "https://api-ligtas.parallaxed.ph/auth/google?hd=g.batstate-u.edu.ph")
             }
+            // onClick={() =>
+            //   (window.location.href = "https://localhost:5000/auth/google?hd=g.batstate-u.edu.ph")
+            // }
           >
             <img
               src={`${basePath}/googleicon.png`}

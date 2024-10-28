@@ -58,7 +58,7 @@ router.post("/register", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h", // Token expiry time
+        expiresIn: "6h", // Token expiry time
       }
     );
 
@@ -99,7 +99,7 @@ router.post("/login", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "6h",
       }
     );
 
@@ -121,7 +121,7 @@ router.get("/logout", (req, res) => {
 
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"], hd: "g.batstate-u.edu.ph" })
 );
 
 router.get(
@@ -129,13 +129,22 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     // Assuming you have access to user information in req.user
-    const { id, name, profile_image, email } = req.user;
+    const { id, name, profile_image, email, _json } = req.user;
+
+     // Extract hosted domain (hd) from the Google response
+     const domain = _json.hd;
+
+    //      // Check if the user belongs to the allowed domain
+    // if (domain !== "g.batstate-u.edu.ph") {
+    //   return res.status(403).json({ error: "Unauthorized domain" });
+    // }
+
 
     // Generate JWT token
     const userToken = jwt.sign(
       { id, name, profile_image, email },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" } // Token expiry time
+      { expiresIn: "6h" } // Token expiry time
     );
 
     // Redirect with token in query parameter

@@ -26,6 +26,20 @@ passport.use(
     },
     async (userToken, tokenSecret, profile, done) => {
       try {
+
+        ///GOOGLE BSU ACCOUNT ONY
+         // Check if the hosted domain (hd) exists and matches your organization's domain
+         const email = profile.emails[0].value;
+         const domain = profile._json.hd;
+ 
+         // Ensure the user is from your organization domain
+         if (domain !== 'g.batstate-u.edu.ph') {
+           return done(null, false, { message: "Unauthorized domain" });
+         }
+
+         /////////////
+
+         
         const user = await userController.createGoogleUser(profile);
         return done(null, user);
       } catch (error) {

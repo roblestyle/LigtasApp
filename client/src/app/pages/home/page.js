@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative h-screen w-screen">
       <div className="fixed inset-0 z-0">
         <Homebg />
       </div>

@@ -13,7 +13,7 @@ UploadedImage.init(
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     latitude: {
       type: DataTypes.STRING,
@@ -35,6 +35,14 @@ UploadedImage.init(
     isNoified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    condition:{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    message: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
