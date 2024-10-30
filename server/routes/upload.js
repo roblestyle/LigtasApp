@@ -28,7 +28,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   // }
 
   // Extracting location data from the request body
-  const { latitude, longitude, userId, condition, message } = req.body;
+  const { latitude, longitude, userId, condition, message, campus, contactNumber } = req.body;
   if (!latitude || !longitude || !userId || !condition) {
     return res.status(400).send("Location data or userId or condition is missing.");
   }
@@ -48,6 +48,8 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       userId: userId,
       condition: condition, // Store the condition (1 or 0)
       message: message,
+      campus: campus, // Store the campus
+      contactNumber: contactNumber // Store the contact number
     });
 
  console.log("File has been received:", req.file ? req.file.originalname : "No image uploaded");
@@ -63,6 +65,8 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       },
       condition: condition === "1" ? "is Safe" : "Needs Help", // Return the condition in human-readable form
       message: message,
+      campus: campus, // Include campus in the response
+      contactNumber: contactNumber // Include contact number in the response
     });
   } catch (error) {
     console.error("Error saving to database:", error);

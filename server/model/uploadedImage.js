@@ -44,6 +44,14 @@ UploadedImage.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    campus: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    contactNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize, // Pass the Sequelize instance

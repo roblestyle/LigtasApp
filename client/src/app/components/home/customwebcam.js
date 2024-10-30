@@ -107,7 +107,7 @@
 
 
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import Webcam from "react-webcam";
 import axios from "../../api/axios";
 import Popup from "./popup"; // Adjust the path based on your file structure
@@ -115,16 +115,34 @@ import { Play } from "next/font/google";
 
 const play = Play({ weight: ["400", "700"], subsets: ["latin"] });
 
+const campuses = [
+  "Pablo Borbon",
+  "Alangilan",
+  "ARASOF-Nasugbu",
+  "Balayan",
+  "Lemery",
+  "Mabini",
+  "JPLPC-Malvar",
+  "Lipa",
+  "Rosario",
+  "San Juan",
+  "Lobo",
+];
+
 
 const WebcamComponent = ({ user }) => {
   const webcamRef = useRef(null);
+  const dropdownRef = useRef(null); // Ref for the dropdown container
   const [error, setError] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [facingMode, setFacingMode] = useState("user");
   const [condition, setCondition] = useState(null); // State for OK or Needs Help
   const [isWebcamOpen, setIsWebcamOpen] = useState(false); // State for webcam visibility
   const [message, setMessage] = useState(""); // State for the message from user
-
+  const [contactNumber, setContactNumber] = useState(""); // State for contact number
+  const [affiliatedCampus, setAffiliatedCampus] = useState(""); // State for campus
+  const [filteredCampuses, setFilteredCampuses] = useState(campuses); // Filtered list for dropdown
+  const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
 
   const capture = async () => {
     try {
@@ -147,10 +165,18 @@ const WebcamComponent = ({ user }) => {
         return; // Stop further execution
       }
 
+       // Validate contact number if "Needs Help" is selected
+       if (condition === 0 && contactNumber.trim() === "") {
+        setError("Please enter a contact number.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("userId", user);
       formData.append("condition", condition); // Append the selected condition
       formData.append("message", message); // Append the user's message
+      formData.append("campus", affiliatedCampus); // Append the selected campus
+      if (condition === 0) formData.append("contactNumber", contactNumber);
   
       // If the webcam is open, capture the image
       if (isWebcamOpen && webcamRef.current) {
@@ -197,6 +223,49 @@ const WebcamComponent = ({ user }) => {
   const toggleWebcam = () => {
     setIsWebcamOpen((prevOpen) => !prevOpen); // Toggle the webcam visibility
   };
+
+  const handleCampusChange = (e) => {
+    const input = e.target.value;
+    setAffiliatedCampus(input);
+
+    // Filter campuses based on input
+    const filtered = campuses.filter((campus) =>
+      campus.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredCampuses(filtered);
+
+    // Show dropdown if input is not empty
+    setDropdownVisible(input.length > 0);
+  };
+
+  const selectCampus = (campus) => {
+    setAffiliatedCampus(campus);
+    setFilteredCampuses([]);
+    setDropdownVisible(false); // Hide dropdown after selection
+  };
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+   // Close dropdown when clicking outside
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    };
+
+    if (dropdownVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownVisible]);
 
 
   return (
@@ -271,6 +340,60 @@ const WebcamComponent = ({ user }) => {
           <p className="text-red-600 font-bold">You need Help!</p>
         )}
       </div>
+
+
+      {condition === 0 && (
+        <div className="flex flex-col justify-center items-center mb-4">
+          <input
+            type="text"
+            value={contactNumber}
+            onChange={(e) => setContactNumber(e.target.value)}
+            placeholder="Please provide us your contact number"
+            className="p-2 border rounded-md w-96"
+            required
+          />
+        </div>
+      )}
+
+   {/* Campus Input and Dropdown */}
+   <div className="flex flex-col justify-center items-center mb-4 relative"  ref={dropdownRef}>
+        <label className="mb-2 font-semibold">Affiliated Campus</label>
+        <div className="flex items-center w-96">
+          <input
+            type="text"
+            value={affiliatedCampus}
+            onChange={handleCampusChange}
+            placeholder="Type or select your campus"
+            className="p-2 border rounded-l-md w-full"
+          />
+          <button
+            onClick={toggleDropdown}
+            className="p-2 border rounded-r-md bg-gray-200"
+          >
+            ▼
+          </button>
+        </div>
+
+        {/* Dropdown options, overlayed */}
+        {dropdownVisible && (
+          <ul
+            className="absolute top-full mt-1 w-96 max-h-48 overflow-y-auto bg-white border rounded-md shadow-lg z-20"
+          >
+            {filteredCampuses.map((campus, index) => (
+              <li
+                key={index}
+                onClick={() => selectCampus(campus)}
+                className="p-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {campus}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+
+
 
       <div className="flex flex-col justify-center items-center mb-4">
         <textarea

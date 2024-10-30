@@ -213,6 +213,7 @@ const handleRetractHelp = useCallback(
         />
 
         {filteredLocations.map((location) => (
+          console.log(location),
           <Marker
             key={location.id}
             position={[
@@ -237,8 +238,20 @@ const handleRetractHelp = useCallback(
                 <p className="text-black text-xs" style={{ color: "darkred" }}>
                   Location uploaded by {location.userName}
                 </p>
+
+                {
+                  location.condition.trim() ==="Needs Help" && (
+                    <p className="text-black text-xs" style={{ color: "darkred" }}>
+                    Contact: {location.contactNumber}
+                  </p>
+                  )
+                }
+               
                 <p className="text-black text-xs" style={{ color: "darkred" }}>
                   Email: {location.userEmail}
+                </p>
+                <p className="text-black text-xs" style={{ color: "darkred" }}>
+                  Campus: {location.campus}
                 </p>
                 <p className="text-black text-xs" style={{ color: "darkred" }}>
                   Spartan {location.condition}
