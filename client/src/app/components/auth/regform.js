@@ -61,7 +61,7 @@ const Regform = () => {
           Batangas State University
         </h1>
         <p className="text-lg sm:text-xl font-semibold text-white text-center sm:text-left">
-          LIGTAS
+          Safe Spartan
         </p>
       </div>
       <div className="h-full flex flex-col justify-start p-4">
