@@ -122,7 +122,7 @@ function UserLogin() {
             type="button"
             className="text-black bg-white text-md sm:text-lg focus:ring-1 focus:outline-none focus:ring-[#FFD910]/50 font-medium rounded-md text-sm px-4 py-2 text-center sm:w-64 inline-flex justify-center items-center mb-2 transition duration-300 ease-in-out hover:bg-red-800 hover:text-white"
             onClick={() =>
-              (window.location.href = "https://api-ligtas.parallaxed.ph/auth/google?hd=g.batstate-u.edu.ph")
+              (window.location.href = "https://steerhub.batstateu.edu.ph/ligtas-app-backend/auth/google?hd=g.batstate-u.edu.ph")
             }
             // onClick={() =>
             //   (window.location.href = "https://localhost:5000/auth/google?hd=g.batstate-u.edu.ph")

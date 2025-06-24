@@ -33,9 +33,7 @@ const Regform = () => {
           email,
           user_password: password,
           profile_image: profileImageUrl,
-        });
-
-        if (response.status === 200) {
+        });        if (response.status === 200) {
           const userToken = response.data.userToken;
           localStorage.setItem("userToken", userToken);
           localStorage.setItem("profileImage", profileImageUrl);
@@ -43,7 +41,18 @@ const Regform = () => {
         }
       } catch (error) {
         console.error("Registration failed:", error);
-        setRegistrationError("Registration failed. Please try again later.");
+        
+        if (error.code === "ECONNABORTED") {
+          setRegistrationError("Registration is taking longer than expected. Please wait and check if your account was created successfully.");
+        } else if (error.response && error.response.status === 400) {
+          setRegistrationError("Invalid registration data. Please check your inputs.");
+        } else if (error.response && error.response.status === 409) {
+          setRegistrationError("An account with this email already exists.");
+        } else if (error.response && error.response.data && error.response.data.message) {
+          setRegistrationError(error.response.data.message);
+        } else {
+          setRegistrationError("Registration failed. Please try again later.");
+        }
       }
     },
     [name, email, password, profileImage]
@@ -152,7 +161,7 @@ const Regform = () => {
             type="button"
             className="text-black bg-white text-md sm:text-lg focus:ring-1 focus:outline-none focus:ring-[#FFD910]/50 font-medium rounded-md text-sm px-4 py-2 text-center w-44 sm:w-64 inline-flex justify-center items-center mb-2 transition duration-300 ease-in-out hover:bg-red-800 hover:text-white"
             onClick={() =>
-              (window.location.href = "https://api-ligtas.parallaxed.ph/auth/google")
+              (window.location.href = "https://steerhub.batstateu.edu.ph/ligtas-app-backend/auth/google")
             }
           >
             <img

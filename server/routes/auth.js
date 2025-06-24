@@ -137,18 +137,16 @@ router.get(
     //      // Check if the user belongs to the allowed domain
     // if (domain !== "g.batstate-u.edu.ph") {
     //   return res.status(403).json({ error: "Unauthorized domain" });
-    // }
-
-
-    // Generate JWT token
+    // }    // Generate JWT token
     const userToken = jwt.sign(
       { id, name, profile_image, email },
       process.env.JWT_SECRET,
       { expiresIn: "6h" } // Token expiry time
     );
 
-    // Redirect with token in query parameter
-    res.redirect(`https://api-ligtas.parallaxed.ph/pages/home?userToken=${userToken}`);
+    // Redirect with token in query parameter to the correct frontend URL
+    const frontendUrl = process.env.FRONTEND_URL || 'https://steerhub.batstateu.edu.ph/safespartan';
+    res.redirect(`${frontendUrl}/pages/home?userToken=${userToken}`);
   }
 );
 

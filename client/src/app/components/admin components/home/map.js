@@ -231,7 +231,7 @@ const handleRetractHelp = useCallback(
             <Popup>
               <div className="text-center popup-content">
                 <img
-                  src={`https://api-ligtas.parallaxed.ph${location.image}`}
+                  src={`https://steerhub.batstateu.edu.ph/ligtas-app-backend/${location.image}`}
                   alt="No Image Sent"
                   className="w-full text-black mb-2 rounded-lg place-self-center"
                 />
