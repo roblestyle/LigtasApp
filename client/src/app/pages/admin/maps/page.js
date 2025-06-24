@@ -14,13 +14,14 @@ const LeafletMap = dynamic(
 );
 
 function MapsPage() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const [adminToken, setToken] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("adminToken");
 
     if (!storedToken) {
-      window.location.href = "/pages/admin/login";
+      window.location.href = `${basePath}/pages/admin/login`;
     } else {
       try {
         const decodedToken = jwtDecode(storedToken);
@@ -29,14 +30,14 @@ function MapsPage() {
         if (decodedToken.exp < currentTime) {
           // Token has expired
           localStorage.removeItem("adminToken");
-          window.location.href = "/pages/admin/login";
+          window.location.href = `${basePath}/pages/admin/login`;
         } else {
           setToken(storedToken);
         }
       } catch (error) {
         // If there's an error decoding the token, remove it and redirect to login
         localStorage.removeItem("adminToken");
-        window.location.href = "/pages/admin/login";
+        window.location.href = `${basePath}/pages/admin/login`;
       }
     }
   }, []);

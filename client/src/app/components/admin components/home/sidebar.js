@@ -11,11 +11,10 @@ const Sidebar = () => {
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
-    window.location.href = "/pages/admin/login"; // Redirect to login page
+    window.location.href = `${basePath}/pages/admin/login`; // Redirect to login page
   };
 
   // Handle click outside the sidebar
@@ -132,10 +131,9 @@ const Sidebar = () => {
             <div className="flex justify-center">
               <hr className="border-t-1 border-white w-64 my-3 md:my-5" />
             </div>
-            <ul className="space-y-2 mx-4 font-medium flex-1">
-              <li>
+            <ul className="space-y-2 mx-4 font-medium flex-1">              <li>
                 <a
-                  href="/pages/admin/maps"
+                  href={`${basePath}/pages/admin/maps`}
                   className="flex items-center p-2 hover:text-red-950 rounded-lg text-white hover:bg-white"
                 >
                   <svg
@@ -154,10 +152,9 @@ const Sidebar = () => {
                     Map Dashboard
                   </span>
                 </a>
-              </li>
-              <li>
+              </li>              <li>
                 <a
-                  href="/pages/admin/accounts"
+                  href={`${basePath}/pages/admin/accounts`}
                   className="flex items-center p-2 hover:text-red-950 rounded-lg text-white hover:bg-white"
                 >
                   <svg

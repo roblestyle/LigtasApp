@@ -135,10 +135,9 @@ function UserLogin() {
             />
             Google
           </button>
-        </div>
-        <p className="text-white mb-1 text-center text-xs sm:text-lg sm:text-left">
+        </div>        <p className="text-white mb-1 text-center text-xs sm:text-lg sm:text-left">
           Don&apos;t have an account?{" "}
-          <a href="/" className="text-[#FFD910] underline underline-offset-1">
+          <a href={`${basePath}/`} className="text-[#FFD910] underline underline-offset-1">
             Sign Up
           </a>
         </p>

@@ -3,12 +3,13 @@
 import React, { useState, useRef, useEffect } from "react";
 
 export default function ProfileDropdown({ profileImage, handleDeleteAccount }) {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef(null);
 
   const handleSubmit = () => {
     localStorage.removeItem("userToken");
-    window.location.href = "/pages/login/";
+    window.location.href = `${basePath}/pages/login/`;
   };
 
   const toggleProfileDropdown = () => {

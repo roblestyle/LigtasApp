@@ -13,11 +13,9 @@ const AdminLogin = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("/admin/login", { username, password });
-
-      if (response.status === 200 && response.data.adminToken) {
+      const response = await axios.post("/admin/login", { username, password });      if (response.status === 200 && response.data.adminToken) {
         localStorage.setItem("adminToken", response.data.adminToken);
-        window.location.href = `/pages/admin/maps`;
+        window.location.href = `${basePath}/pages/admin/maps`;
       } else {
         setLoginError("Login failed. Please try again later.");
       }

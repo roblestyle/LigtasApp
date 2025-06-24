@@ -221,7 +221,7 @@ const handleRetractHelp = useCallback(
               parseFloat(location.longitude),
             ]}
             icon={
-              location.condition.trim() === "is Safe"
+              location.condition.trim() === "OK"
                 ? okIcon
                 : location.condition.trim() === "is Rescued"
                 ? rescuedIcon

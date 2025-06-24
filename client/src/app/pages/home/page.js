@@ -9,13 +9,14 @@ import { jwtDecode } from "jwt-decode";
 import axios from "../../api/axios";
 
 export default function Home() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const [userName, setUserName] = useState(null);
   const [userId, setUserId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
 
   const handleSubmit = () => {
     localStorage.removeItem("userToken");
-    window.location.href = "/pages/login/";
+    window.location.href = `${basePath}/pages/login/`;
   };
 
   const handleDeleteAccount = async () => {
@@ -54,9 +55,8 @@ export default function Home() {
       redirectToLogin();
     }
   }, []);
-
   const redirectToLogin = () => {
-    window.location.href = "/pages/login/";
+    window.location.href = `${basePath}/pages/login/`;
   };
 
   return (

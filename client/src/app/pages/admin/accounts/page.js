@@ -6,13 +6,15 @@ import Dashboardbg from "@/app/components/admin components/home/dashboardbg";
 import Table from "@/app/components/admin components/home/table";
 
 export default function Page() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  
   useEffect(() => {
     const adminToken = localStorage.getItem("adminToken");
 
     if (!adminToken) {
-      window.location.href = "/pages/admin/login";
+      window.location.href = `${basePath}/pages/admin/login`;
     }
-  }, []);
+  }, [basePath]);
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-gray-900">

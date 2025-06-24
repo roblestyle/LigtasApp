@@ -171,11 +171,10 @@ const Regform = () => {
             />
             Google
           </button>
-        </div>
-        <p className="text-white mb-1 text-center text-xs sm:text-lg sm:text-left">
+        </div>        <p className="text-white mb-1 text-center text-xs sm:text-lg sm:text-left">
           Already have an account?{" "}
           <a
-            href="/pages/login"
+            href={`${basePath}/pages/login`}
             className="text-[#FFD910] underline underline-offset-1"
           >
             Sign in
