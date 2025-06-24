@@ -145,7 +145,9 @@ router.get(
     );
 
     // Redirect with token in query parameter to the correct frontend URL
-    const frontendUrl = process.env.FRONTEND_URL || 'https://steerhub.batstateu.edu.ph/safespartan';
+    // Temporarily hardcoded to ensure correct redirect
+    const frontendUrl = 'https://steerhub.batstateu.edu.ph/safespartan';
+    console.log(`Redirecting to: ${frontendUrl}/pages/home?userToken=${userToken}`);
     res.redirect(`${frontendUrl}/pages/home?userToken=${userToken}`);
   }
 );

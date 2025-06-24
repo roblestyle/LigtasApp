@@ -22,7 +22,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      callbackURL: "https://steerhub.batstateu.edu.ph/ligtas-app-backend/auth/google/redirect",
     },
     async (userToken, tokenSecret, profile, done) => {
       try {
