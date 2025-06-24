@@ -5,8 +5,8 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  // basePath: '/commandcenter/ligtas/app',
-  // assetPrefix: '/commandcenter/ligtas/app/', 
+  basePath: '/safespartan',
+  assetPrefix: '/safespartan/', 
 };
 
 export default nextConfig;
